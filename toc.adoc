@@ -1,4 +1,8 @@
 * link:presentacion.html[Bienvenido al curso : EL lenguaje dinámico Groovy]
+** link:presentacion.html#bookmark-1[Bienvenido a MakingDevs]
+** link:presentacion.html#bookmark-2[Objetivo del entrenamiento]
+** link:presentacion.html#bookmark-3[Consideraciones]
+** link:presentacion.html#bookmark-4[Complementos al entrenamiento]
 * link:lenguajes_dinamicos.html[Programación con lenguajes dinámicos]
 ** link:lenguajes_dinamicos.html#bookmark-1[¿Qué son los lenguajes dinámicos?]
 ** link:lenguajes_dinamicos.html#bookmark-2[¿Qué es Groovy?]

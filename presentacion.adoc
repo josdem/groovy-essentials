@@ -1,6 +1,6 @@
 :icons: font
 
-# Bienvenido a MakingDevs
+# [[bookmark-1]]Bienvenido a MakingDevs
 
 Nuestro compromiso es ofrecerte una experiencia que realce las habilidades de aquellas personas que se dedican a desarrollar software. Sabemos que la responsabilidad de crear aplicaciones debe de estar sustentada con habilidades que permitan garantizar la calidad de las mismas, así como, la satisfacción de quiénes las usan. Nosotros creemos importante que la preparación de los profesionales del software debe estar dirigida a:
 
@@ -29,7 +29,7 @@ Adicionalmente, como muestra de una parte de nuestro trabajo, colaboramos activa
 
 *“Making best code, through better developers”*
 
-## Objetivo del entrenamiento
+## [[bookmark-2]]Objetivo del entrenamiento
 * Queremos que aproveches y explotes tus habilidades como desarrollador Java
 * Aprender un nuevo lenguaje, y mejor si este es dinámico
 * Comenzar a usar Groovy en tus proyectos de software
@@ -38,7 +38,7 @@ Adicionalmente, como muestra de una parte de nuestro trabajo, colaboramos activa
 * Tener los elementos esenciales para desarrollar en Grails
 * Divertirse aprendiendo Groovy
 
-## Consideraciones
+## [[bookmark-3]]Consideraciones
 * El curso es práctico, y por lo tanto la primera recomendación es: *practiquen!*
 * Iremos mencionando referencias a herramientas, artículos y tecnologías que pueden ayudarnos.
 * Las dudas pueden exponerse durante clase, en el momento que se presenten, no esperes, es tu tiempo.
@@ -47,7 +47,7 @@ Adicionalmente, como muestra de una parte de nuestro trabajo, colaboramos activa
 * Aunque hay ejemplos de código, te recomendamos tomar notas de código como comentarios.
 * Habrá evaluaciones de conocimiento.
 
-## Herramientas para entrenamiento
+## [[bookmark-4]]Herramientas para entrenamiento
 Es importante contar con los siguientes elementos instalados:
 
 * Necesarios:
