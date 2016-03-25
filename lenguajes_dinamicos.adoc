@@ -72,4 +72,4 @@ Hamlet D’Arcy +
 Canoo Engineering AG +
 link:http://www.slideshare.net/HamletDRC/10-years-of-groovy[Presentación en SlideShare] Slide 76.
 
-
+[small]#Powered by link:http://makingdevs.com/[MakingDevs.com]#
