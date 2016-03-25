@@ -1,0 +1,75 @@
+:icons: font
+
+# Programación con lenguajes dinámicos
+
+## ¿Por qué los lenguajes dinámicos?
+Los lenguajes dinámicos, junto con las capacidades de metaprogramación, hacen las cosas simples más simples y las complejas manejables. Tenemos que tratar con la complejidad heredada de nuestra aplicación, pero los lenguajes dinámicos nos permiten enfocar nuestros esfuerzos en lo que de verdad vale la pena.
+
+## ¿Qué son los lenguajes dinámicos?
+* Son aquellos que tienen la habilidad de extender un programa en tiempo de ejecución, eso incluye cambiar la estructura de objetos, tipos y comportamiento
+* Aquellos que permiten hacer cosas en tiempo de ejecución que los lenguajes estáticos te permiten en tiempo de compilación
+* Pueden ejecutar instrucciones que fueron creadas al vuelo en tiempo de ejecución
+
+### ¿Por qué usarlos?
+* Velocidad de las máquinas
+* Disponibilidad
+* Conciencia del unit testing
+* Killer Apps
+
+### ¿Qué es Groovy?
+“Groovy es como una super-versión de Java. Puede maximizar las capacidades empresariales de Java pero además tiene características de productividad frescas como closures, builders y tipado dinámico…”
+
+* Es un lenguaje ágil y dinámico para la Máquina Virtual de Java
+* Construido sobre las fortalezas de Java pero tiene características adicionales de poder inspiradas por lenguajes como Python, Ruby y Smalltalk
+* Hace que las características de programación modernas estén disponibles para los desarrolladores Java con una curva de aprendizaje casi de cero
+* Soporta Lenguajes de Dominio Específico(DSL) y otra sintaxis compacta haciendo que el código llegue a ser fácil de leer y de mantener
+* Incrementa la productividad del desarrollador reduciendo el código de ensamblado cuando se desarrolla en Web, GUI, base de datos o aplicaciones de consola
+* Simplifica el testing soportando unit testing y el mocking fuera-de-caja
+* Compila directo a bytecode Java
+
+### ¿Por qué Groovy?
+La plataforma Java es sin duda una de los ecosistemas más poderosos y ampliamente adoptada actualmente. Cuenta con tres piezas importantes:
+
+* La JVM se ha vuelto cada vez más potente y ha mejorado su rendimiento en los últimos años.
+* El JDK, el conjunto de librerías de terceros y los frameworks nos ayudan eficazmente a aprovechar el poder de la plataforma.
+* El conjunto de las lenguajes en la JVM (siendo Java el primero) que nos ayuda programar en la plataforma.
+
+### Por cuestiones personales…
+* Ya era hora
+* Aburrimiento
+* Complejidad
+* Ceremonia
+* Fuertemente tipado
+
+### Es atractivo…
+* Tiene una curva de aprendizaje muy ligera
+* Sigue la semántica de Java
+* Te transmite el gusto por lo dinámico
+* Extiende el JDK
+
+### De forma ‘empresarial’…
+* Java como plataforma
+** Zillions de librerías
+** Zillions de herramientas
+** Comunidad enorme
+** Escalable
+** La industria ha invertido muchisimo
+* Construido sobre la plataforma Java, en lugar de portar otra plataforma dentro de la JVM, lo que lleva a abstracciones débiles
+* Reuso de conocimiento adquirido
+* Ayuda a que JSE y JEE sea más sencillo
+* Sintaxis 99.9% concebida con Java 5
+* Facilita el uso del JDK
+* Spring 4 usará Groovy mayormente
+
+WARNING: Usar Groovy no significa que:
+“...vamos a reescribir nuestra aplicación entera desde abajo para tomar ventaja de este nuevo lenguaje...”
+ Usar Groovy significa que:
+
+TIP: “...vamos a usar un lenguaje que se integre fluidamente con nuestro código existente...”
+
+#### La breve historia de Groovy
+Hamlet D’Arcy +
+Canoo Engineering AG +
+link:http://www.slideshare.net/HamletDRC/10-years-of-groovy[Presentación en SlideShare] Slide 76.
+
+
