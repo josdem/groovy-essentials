@@ -5,7 +5,7 @@
 ## ¿Por qué los lenguajes dinámicos?
 Los lenguajes dinámicos, junto con las capacidades de metaprogramación, hacen las cosas simples más simples y las complejas manejables. Tenemos que tratar con la complejidad heredada de nuestra aplicación, pero los lenguajes dinámicos nos permiten enfocar nuestros esfuerzos en lo que de verdad vale la pena.
 
-## ¿Qué son los lenguajes dinámicos?
+## [[bookmark-1]]¿Qué son los lenguajes dinámicos?
 * Son aquellos que tienen la habilidad de extender un programa en tiempo de ejecución, eso incluye cambiar la estructura de objetos, tipos y comportamiento
 * Aquellos que permiten hacer cosas en tiempo de ejecución que los lenguajes estáticos te permiten en tiempo de compilación
 * Pueden ejecutar instrucciones que fueron creadas al vuelo en tiempo de ejecución
@@ -16,7 +16,7 @@ Los lenguajes dinámicos, junto con las capacidades de metaprogramación, hacen 
 * Conciencia del unit testing
 * Killer Apps
 
-### ¿Qué es Groovy?
+### [[bookmark-2]]¿Qué es Groovy?
 “Groovy es como una super-versión de Java. Puede maximizar las capacidades empresariales de Java pero además tiene características de productividad frescas como closures, builders y tipado dinámico…”
 
 * Es un lenguaje ágil y dinámico para la Máquina Virtual de Java
@@ -27,7 +27,7 @@ Los lenguajes dinámicos, junto con las capacidades de metaprogramación, hacen 
 * Simplifica el testing soportando unit testing y el mocking fuera-de-caja
 * Compila directo a bytecode Java
 
-### ¿Por qué Groovy?
+### [[bookmark-3]]¿Por qué Groovy?
 La plataforma Java es sin duda una de los ecosistemas más poderosos y ampliamente adoptada actualmente. Cuenta con tres piezas importantes:
 
 * La JVM se ha vuelto cada vez más potente y ha mejorado su rendimiento en los últimos años.
