@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.2">
-<title>Untitled</title>
+<title>Fundamentos y principios de Groovy</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -408,60 +408,173 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 .hide-for-print{display:none!important}
 .show-for-print{display:inherit!important}}
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css">
 </head>
 <body class="article">
 <div id="header">
+<h1>Fundamentos y principios de Groovy</h1>
 </div>
 <div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre>Eres un desarrollador Java...
+Groovy es Java y Java es Groovy...
+Eres un desarrollador Groovy!</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ejecutando_código_groovy">Ejecutando código Groovy</h2>
+<div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
-<p><a href="presentacion.html">Bienvenido al curso : EL lenguaje dinámico Groovy</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="presentacion.html#bookmark-1">Bienvenido a MakingDevs</a></p>
+<p>Instalación convencional</p>
 </li>
 <li>
-<p><a href="presentacion.html#bookmark-2">Objetivo del entrenamiento</a></p>
+<p>Tener el JDK instalado</p>
 </li>
 <li>
-<p><a href="presentacion.html#bookmark-3">Consideraciones</a></p>
+<p>Establecer la variable JAVA_HOME y agregarla al PATH en el subdirectorio /bin</p>
 </li>
 <li>
-<p><a href="presentacion.html#bookmark-4">Complementos al entrenamiento</a></p>
+<p>Descargamos la distribución de Groovy en <a href="http://groovy.codehaus.org/" class="bare">http://groovy.codehaus.org/</a></p>
+</li>
+<li>
+<p>Creamos una variable de entorno GROOVY_HOME apuntando al directorio donde se descomprimió la distribución</p>
+</li>
+<li>
+<p>Adicionalmente, incluir en el PATH el directorio /bin de la variable de entorno GROOVY_HOME, es decir: %GROOVY_HOME%/bin</p>
+</li>
+<li>
+<p>Let’s rock the code!!!</p>
 </li>
 </ul>
 </div>
-</li>
-<li>
-<p><a href="lenguajes_dinamicos.html">Programación con lenguajes dinámicos</a></p>
-<div class="ulist">
-<ul>
-<li>
-<p><a href="lenguajes_dinamicos.html#bookmark-1">¿Qué son los lenguajes dinámicos?</a></p>
-</li>
-<li>
-<p><a href="lenguajes_dinamicos.html#bookmark-2">¿Qué es Groovy?</a></p>
-</li>
-<li>
-<p><a href="lenguajes_dinamicos.html#bookmark-3">¿Por qué Groovy?</a></p>
-</li>
-</ul>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Acerca de la instalación: El binario de la distribución soporta múltiples plataformas, algunas distribuciones Linux ya lo contemplan en sus repositorios
+</td>
+</tr>
+</table>
 </div>
-</li>
-<li>
-<p><a href="fundamentos_principios.html">Fundamentos y principios de Groovy</a></p>
-</li>
-</ul>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_instalación_recomendada_para_nix">Instalación recomendada para *nix</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>GVM es una herramienta para administrar versiones paralelas de múltiples kits de desarrollos sobre la mayoría de sistemas Unix. Provee de una interfaz conveniente en línea de comando para instalar, cambiar, quitar y listar los kits candidatos.</p>
 </div>
 <div class="paragraph">
-<p><span class="small">Powered by <a href="http://makingdevs.com/">MakingDevs.com</a></span></p>
+<p>GVM estuvo inspirado en RVM usado por la comunidad de Ruby.</p>
+</div>
+<div class="paragraph">
+<p>Los kits que están actualmente soportados son:
+* Groovy
+* Grails
+* Griffon
+* Gradle
+* Groovyserv
+* Lazybones
+* vert.x</p>
+</div>
+<div class="paragraph">
+<p>Corre sobre las siguientes plataformas:
+* Linux
+* Mac OSX
+* Cygwin
+* Solaris
+* FreeBSD (with bash installed)</p>
+</div>
+<div class="paragraph">
+<p>GVM está escrito en bash y solamente necesitar tener instalado en el sistema operativo curl y unzip. El instalador checa por dichas dependencias antes de completar el proceso de instalación. Después, crea el directorio .gvm/ en el ‘home’ del usuario, para despúes descargar y configurar los kits que deseas.</p>
+</div>
+<div class="paragraph">
+<p>Para instalar GVM y la última versión de Groovy solo tenemos que abrir una terminal de bash y teclear:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>curl -s get.gvmtool.net | bash
+gvm install groovy</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_groovy_shell_groovysh">Groovy Shell &#8658; groovysh</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Sólo abre una consola y escribe ‘groovysh’, comienza a codificar:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>❯ groovysh
+Groovy Shell (2.1.7, JVM: 1.7.0_06-ea)
+Type 'help' or '\h' for help.
+--------------------------------------
+groovy:000&gt; println "Hola MakingDevs!"
+Hola MakingDevs!
+===&gt; null
+groovy:000&gt;</pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ejecución_desde_línea_de_comando">Ejecución desde línea de comando</h3>
+<div class="paragraph">
+<p>Crea un archivo de texto con la extensión .groovy y desde línea de comando ejecutalo:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>❯ groovy archivo.groovy</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Realmente lo que sucede es que Groovy compila y ejecuta el contenido del archivo pero no nos entrega el bytecode; si deseamos obtenerlo entonces tenemos que decirle que lo genere:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>❯ groovyc archivo.groovy</pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Bytecode! ¿Qué podemos hacer con bytecode?
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Uso de la GroovyConsole
+Para ejecutarlo en la consola escribimos: groovyConsole</p>
+</div>
+<div class="paragraph">
+<p>alt groovyConsole</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_de_java_a_groovy">De Java a Groovy</h3>
+
+</div>
+</div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-03-25 11:46:14 CST
+Last updated 2016-03-25 11:56:19 CST
 </div>
 </div>
 </body>

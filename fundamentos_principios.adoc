@@ -1,0 +1,84 @@
+:icons: font
+
+# Fundamentos y principios de Groovy
+
+  Eres un desarrollador Java...
+  Groovy es Java y Java es Groovy...
+  Eres un desarrollador Groovy!
+
+## Ejecutando código Groovy
+* Instalación convencional
+* Tener el JDK instalado
+* Establecer la variable JAVA_HOME y agregarla al PATH en el subdirectorio /bin
+* Descargamos la distribución de Groovy en http://groovy.codehaus.org/
+* Creamos una variable de entorno GROOVY_HOME apuntando al directorio donde se descomprimió la distribución
+* Adicionalmente, incluir en el PATH el directorio /bin de la variable de entorno GROOVY_HOME, es decir: %GROOVY_HOME%/bin
+* Let’s rock the code!!!
+
+TIP: Acerca de la instalación: El binario de la distribución soporta múltiples plataformas, algunas distribuciones Linux ya lo contemplan en sus repositorios
+
+## Instalación recomendada para *nix
+GVM es una herramienta para administrar versiones paralelas de múltiples kits de desarrollos sobre la mayoría de sistemas Unix. Provee de una interfaz conveniente en línea de comando para instalar, cambiar, quitar y listar los kits candidatos.
+
+GVM estuvo inspirado en RVM usado por la comunidad de Ruby.
+
+Los kits que están actualmente soportados son:
+* Groovy
+* Grails
+* Griffon
+* Gradle
+* Groovyserv
+* Lazybones
+* vert.x
+
+Corre sobre las siguientes plataformas:
+* Linux
+* Mac OSX
+* Cygwin
+* Solaris
+* FreeBSD (with bash installed)
+
+GVM está escrito en bash y solamente necesitar tener instalado en el sistema operativo curl y unzip. El instalador checa por dichas dependencias antes de completar el proceso de instalación. Después, crea el directorio .gvm/ en el ‘home’ del usuario, para despúes descargar y configurar los kits que deseas.
+
+Para instalar GVM y la última versión de Groovy solo tenemos que abrir una terminal de bash y teclear:
+
+----
+curl -s get.gvmtool.net | bash
+gvm install groovy
+----
+
+## Groovy Shell => groovysh
+Sólo abre una consola y escribe ‘groovysh’, comienza a codificar:
+
+----
+❯ groovysh
+Groovy Shell (2.1.7, JVM: 1.7.0_06-ea)
+Type 'help' or '\h' for help.
+--------------------------------------
+groovy:000> println "Hola MakingDevs!"
+Hola MakingDevs!
+===> null
+groovy:000>
+----
+
+### Ejecución desde línea de comando
+Crea un archivo de texto con la extensión .groovy y desde línea de comando ejecutalo:
+
+----
+❯ groovy archivo.groovy
+----
+
+Realmente lo que sucede es que Groovy compila y ejecuta el contenido del archivo pero no nos entrega el bytecode; si deseamos obtenerlo entonces tenemos que decirle que lo genere:
+
+----
+❯ groovyc archivo.groovy
+----
+
+TIP: Bytecode! ¿Qué podemos hacer con bytecode?
+
+Uso de la GroovyConsole
+Para ejecutarlo en la consola escribimos: groovyConsole
+
+alt groovyConsole
+
+### De Java a Groovy

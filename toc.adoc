@@ -6,6 +6,7 @@
 * link:lenguajes_dinamicos.html[Programación con lenguajes dinámicos]
 ** link:lenguajes_dinamicos.html#bookmark-1[¿Qué son los lenguajes dinámicos?]
 ** link:lenguajes_dinamicos.html#bookmark-2[¿Qué es Groovy?]
-** link:lenguajes_dinamicos.html#bookmark-2[¿Por qué Groovy?]
+** link:lenguajes_dinamicos.html#bookmark-3[¿Por qué Groovy?]
+* link:fundamentos_principios.html[Fundamentos y principios de Groovy]
 
 [small]#Powered by link:http://makingdevs.com/[MakingDevs.com]#
