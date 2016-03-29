@@ -8,5 +8,9 @@
 ** link:lenguajes_dinamicos.html#bookmark-2[¿Qué es Groovy?]
 ** link:lenguajes_dinamicos.html#bookmark-3[¿Por qué Groovy?]
 * link:fundamentos_principios.html[Fundamentos y principios de Groovy]
+** link:fundamentos_principios.html#bookmark-1[Ejecutando código Groovy]
+** link:fundamentos_principios.html#bookmark-2[De Java a Groovy]
+** link:fundamentos_principios.html#bookmark-3[Scripts y clases en Groovy]
+** link:fundamentos_principios.html#bookmark-4[POGO's]
 
 [small]#Powered by link:http://makingdevs.com/[MakingDevs.com]#

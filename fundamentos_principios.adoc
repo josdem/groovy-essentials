@@ -7,7 +7,7 @@
   Groovy es Java y Java es Groovy...
   Eres un desarrollador Groovy!
 
-## Ejecutando código Groovy
+## [[bookmark-1]]Ejecutando código Groovy
 * Instalación convencional
 * Tener el JDK instalado
 * Establecer la variable JAVA_HOME y agregarla al PATH en el subdirectorio /bin
@@ -82,7 +82,7 @@ Para ejecutarlo en la consola escribimos: groovyConsole
 
 image::groovyConsole.png[]
 
-### De Java a Groovy
+### [[bookmark-2]]De Java a Groovy
 
 HolaMundo en Java
 
@@ -198,7 +198,7 @@ java -cp %GROOVY_HOME%/embeddable/groovy-all-2.1.7.jar;. HolaMundo
 ----
 ====
 
-### Scripts y clases en Groovy
+### [[bookmark-3]]Scripts y clases en Groovy
 
 #### Declaración de clases
 * Podemos declarar de la misma forma que una clase Java
@@ -302,7 +302,7 @@ println pedido
 
 TIP: Recuerda! Puedes analizar la clase con javap.
 
-#### POGO’s
+#### [[bookmark-4]]POGO’s
 Los JavaBeans son clases Java comúnes que exponen sus propiedades. Si una clase expone métodos con un esquema de nombrado como getNombre() y setNombre(nombre), entonces se describe a ‘nombre’ como una propiedad de la clase. Los métodos ‘get’ y ‘set’ son llamados métodos de acceso. Y las propiedades booleanas pueden usar el prefijo ‘is’.
 
 La convención de JavaBeans define un modelo ligero y generico para los componentes de software en Java. El modelo del componente esta construido sobre convenciones de nombrado que permiten a las clases Java exponerese ante otras clases o herramientas.
