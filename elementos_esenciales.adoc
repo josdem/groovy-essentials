@@ -1,0 +1,214 @@
+:icons: font
+:source-highlighter: coderay
+
+# Elementos esenciales de Groovy
+
+## Sintaxis y azúcar sintáctica
+
+### Comentarios
+Es posible crear scripts ejecutables portables a plataformas Linux o Unix
+
+[source, groovy]
+----
+#!/usr/bin/env groovy
+
+// Denota comentarios de una sola línea
+/*
+  Comentarios multilínea
+*/
+/**
+* Comentarios para Javadoc son tratados de la misma forma
+* que los comentarios multilínea, pero son soportados por Groovydoc
+*/
+----
+
+### Imports automáticos
+
+[source,groovy]
+----
+// Groovy importa de manera ímplicita 6 paquetes y 2 clases
+import java.lang.*
+import java.util.*
+import java.net.*
+import java.io.*
+import java.math.BigInteger
+import java.math.BigDecimal
+import groovy.lang.*
+import groovy.util.*
+----
+
+### Paréntesis
+
+[source,groovy]
+----
+// El uso de paréntesis es opcional cuando el método invocado tiene por lo menos un argumento
+println("Hola mundo")
+println "hola mundo"
+// "MakingDevs".toUpperCase // NO es válido
+"MakingDevs".toUpperCase()
+----
+
+### ‘return’ opcional
+
+[source, groovy]
+----
+class Calculadora{
+  def operacionCompleja(){
+    4*5**6/89+13
+  }
+}
+def c = new Calculadora()
+c.operacionCompleja()
+----
+
+### Manejo de excepciones
+
+[source, java]
+----
+// Java
+try {
+  Thread.sleep(5000);
+} catch(InterruptedException ex) {
+
+}
+----
+
+[source,groovy]
+----
+// Groovy
+Thread.sleep 5000
+----
+
+### Sobrecarga de operadores
+*Sobrecarga* se refiere al concepto orientado a objetos de tener tipos que especifican un comportamiento y subtipos que sobreescriben este comportamiento para hacerlo más específico. Cuando un lenguaje basa los operadores en llamadas a métodos y permite que dichos métodos sean sobrescritos, dicha aproximación se llama sobrecarga.
+
+.Operadores basados en métodos
+|===
+|Operador | Nombre          | Método
+|a + b    | Suma            | a.plus(b)
+|a - b    | Resta           | a.minus(b)
+|a * b    | Multiplicación  | a.multiply(b)
+|a / b    | División        | a.div(b)
+|a % b    | Módulo          | a.mod(b)
+|a\++ ++a | Post incremento
+            Pre incremento  | def v = a; a=next(); v
+                              a = a.next(); a
+|a-- --a  | Post decremento
+            Pre decremento  | def v = a; a=previous(); v
+                              a = a.previous(); a
+|a == b   | Igual           | if (a implements Comparable) { a.compareTo(b) == 0 } else { a.equals(b) }
+|a != b   | No igual        | ! a== b
+|a > b    | Mayor que       | a.compareTo(b)
+|a >= b   | Mayor igual que | a.compareTo(b)
+|a < b    | Menor que       | a.compareTo(b)
+|a \<= b  | Menor igual que | a.compareTo(b)
+|===
+
+TIP:  La lista completa! La encuentras en la link:http://groovy.codehaus.org/Operator+Overloading[documentación de Groovy]
+
+*SumCash.groovy*
+
+[source,groovy]
+----
+class Money{
+  int amount
+  String currency
+
+  Money plus(Money other){
+    if(null == other) return this
+    if(other.currency != currency){
+      throw new IllegalArgumentException("Invalid operation[$other.currency + $currency]")
+    }
+    return new Money(amount:amount + other.amount, currency:currency)
+  }
+
+  String toString(){
+    "\$ $amount $currency"
+  }
+}
+----
+
+*Sobrecarga de operadores*
+
+[source,groovy]
+----
+Money cuenta1 = new Money(amount:10,currency:'MXN')
+Money cuenta2 = new Money(amount:20,currency:'MXN')
+println cuenta1 + cuenta2
+----
+
+#### Operador de navegación segura, referencias seguras
+
+Cuando una referencia no apunta a ningún objeto en específico, su valor es null. Cuando llamamos un método o accesamos a un atributo de una referencia nula un NullPointerException nos revienta en la cara.
+
+*Null safe*
+
+[source,groovy]
+----
+def s = null
+s.reverse() // NPE
+s?.reverse() // null
+s?.reverse()?.charAt(0)
+----
+
+*Aserciones*
+Es una manera de evaluar una expresión o la ejecución de una instrucción y se refiere a la palabra reservada ’‘’assert’ que siempre evalua a true.
+
+[source,groovy]
+----
+assert(true)
+assert 1 == 1
+def x = 1; assert x == 1
+def y = 2; assert y == 2
+assert ('text'*3<<'hello').size() == 4*3+5
+----
+
+#### Groovy truth
+Es una abreviatura para evaluar cuando algo es verdadero. En Java solo se evalua el tipo boolean, sin embargo, en Groovy podemos evaluar si es null o si el tamaño es cero, o bien, esta vacío…
+
+.Secuencia de reglas usadas para evaluar una prueba booleana
+|===
+| Tipo en runtime   | Criterio de evaluación para ser cierto(true)
+| Boolean           | Corresponde al valor booleano 'true'
+| Matcher           | The matcher tiene un coincidencia
+| Collection        | La colección no es vacía
+| Map               | El mapa no está vacío
+| String, GString   | El String no es vacío
+| Number, Character | El valor no es cero
+| Cualquier otro    | El objeto referenciado no es null
+|===
+
+*Ejemplos*
+
+[source,groovy]
+----
+assert true
+assert !false
+assert "a"
+assert !""
+assert 1.1
+assert 1
+assert !0
+assert -1.2
+assert ! null
+assert ![]
+assert ![:]
+----
+
+#### Primitivos como objetos
+"Todo en Groovy es un objeto, incluso lo que declaras como primitivos."
+
+[source,groovy]
+----
+int a = 1
+double b = 2.0
+float c = 3.0
+char d = 'a'
+boolean e = true
+
+println a.class
+println b.class
+println c.class
+println d.class
+println e.class // meh!
+----

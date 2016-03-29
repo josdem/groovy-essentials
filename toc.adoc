@@ -12,5 +12,6 @@
 ** link:fundamentos_principios.html#bookmark-2[De Java a Groovy]
 ** link:fundamentos_principios.html#bookmark-3[Scripts y clases en Groovy]
 ** link:fundamentos_principios.html#bookmark-4[POGO's]
+* link:elementos_esenciales.html[Elementos esenciales de Groovy]
 
 [small]#Powered by link:http://makingdevs.com/[MakingDevs.com]#
