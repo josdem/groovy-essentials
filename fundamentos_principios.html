@@ -910,13 +910,238 @@ java -cp %GROOVY_HOME%/embeddable/groovy-all-2.1.7.jar;. HolaMundo</pre>
 </div>
 </div>
 </div>
+<div class="sect3">
+<h4 id="_características_de_los_scripts_en_groovy">Características de los scripts en Groovy</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Son archivos de texto, generalmente con la extensión .groovy</p>
+</li>
+<li>
+<p>La ejecución es directa no necesitamos compilar previamente(Groovy lo hace por nosotros)</p>
+</li>
+<li>
+<p>No necesitamos definir una clase para correrlo</p>
+</li>
+<li>
+<p>Si el script necesita de otras clases, no necesita compilarlas para usarlas</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_datos_importantes_de_los_scripts">Datos importantes de los scripts</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Si un archivo .groovy no declara un clase, es transparentemente envuelto en una clase tipo Script</p>
+<div class="ulist">
+<ul>
+<li>
+<p>El contenido del script es contenido en el método run() y este a su vez puesto en un main() construido por Groovy</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Si un archivo Groovy contiene exactamente la declaración de una clase con el mismo nombre del archivo(sin la extensión), se comporta como Java</p>
+</li>
+<li>
+<p>Un archivo Groovy que contenga la declaración de varias clases, no esta forzado a que el nombre del archivo coincida con alguna clase</p>
+</li>
+<li>
+<p>Un archivo Groovy con la mezcla de clases y scripts, conlleva a que el código del script sea la clase principal a ser ejecutada, por lo tanto, no debemos declarar una clase con el mismo nombre del archivo</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Scripting.groovy</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy"><span class="type">class</span> <span class="class">Perfil</span> {
+  <span class="directive">private</span> <span class="predefined-type">String</span> bio
+  <span class="directive">private</span> <span class="predefined-type">Date</span> bornDate
+  <span class="directive">private</span> Persona persona
+  <span class="directive">private</span> <span class="predefined-type">String</span> twitter
+  <span class="directive">private</span> <span class="predefined-type">String</span> facebook
+
+}
+
+<span class="type">class</span> <span class="class">Pedido</span> {
+  Persona comprador
+  <span class="predefined-type">Date</span> dateCreated
+  <span class="predefined-type">Date</span> lastUpdated
+
+  <span class="predefined-type">String</span> toString() {
+    <span class="string"><span class="delimiter">&quot;</span><span class="inline"><span class="inline-delimiter">$</span>comprador</span><span class="content"> - </span><span class="inline"><span class="inline-delimiter">$</span>dateCreated</span><span class="delimiter">&quot;</span></span>
+  }
+}
+
+
+Persona persona = <span class="keyword">new</span> Persona()
+persona.setNombre(<span class="string"><span class="delimiter">&quot;</span><span class="content">Desarrollador</span><span class="delimiter">&quot;</span></span>);
+
+println persona
+
+Perfil perfil = <span class="keyword">new</span> Perfil()
+<span class="keyword">try</span>{
+  perfil.setBio(<span class="string"><span class="delimiter">&quot;</span><span class="content">My bio</span><span class="delimiter">&quot;</span></span>)
+}<span class="keyword">catch</span>(<span class="exception">Exception</span> e){
+  println <span class="string"><span class="delimiter">&quot;</span><span class="content">No se puede establecer la biografia...</span><span class="delimiter">&quot;</span></span>
+}
+
+Pedido pedido = <span class="keyword">new</span> Pedido()
+pedido.setDateCreated(<span class="keyword">new</span> <span class="predefined-type">Date</span>())
+pedido.setComprador(persona)
+println pedido</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Recuerda! Puedes analizar la clase con javap.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_pogo_s">POGO’s</h4>
+<div class="paragraph">
+<p>Los JavaBeans son clases Java comúnes que exponen sus propiedades. Si una clase expone métodos con un esquema de nombrado como getNombre() y setNombre(nombre), entonces se describe a ‘nombre’ como una propiedad de la clase. Los métodos ‘get’ y ‘set’ son llamados métodos de acceso. Y las propiedades booleanas pueden usar el prefijo ‘is’.</p>
+</div>
+<div class="paragraph">
+<p>La convención de JavaBeans define un modelo ligero y generico para los componentes de software en Java. El modelo del componente esta construido sobre convenciones de nombrado que permiten a las clases Java exponerese ante otras clases o herramientas.</p>
+</div>
+<div class="paragraph">
+<p>Un GroovyBean es un JavaBean definido en Groovy. Pero Groovy facilita el trabajo con ellos de varias formas:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Generando los métodos de acceso</p>
+</li>
+<li>
+<p>Permitiendo el acceso simplificado a los JavaBeans</p>
+</li>
+<li>
+<p>Un registro simplificado de manejadores de eventos en conjunto con anotaciones para declarar una propiedad como bindable.</p>
+</li>
+<li>
+<p>Un constructor que recibe un mapa con los posibles valores de los atributos del Bean</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+Considera esto! Posteriormente estaremos viendo el uso de mapas y es donde todo toma sentido&#8230;&#8203;.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>MyBean.java</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">class</span> <span class="class">MyBean</span> <span class="directive">implements</span> java.io.Serializable {
+  <span class="directive">private</span> <span class="predefined-type">String</span> myProp;
+  <span class="directive">public</span> <span class="predefined-type">String</span> getMyprop(){
+    <span class="keyword">return</span> myprop;
+  }
+  <span class="directive">public</span> <span class="type">void</span> setMyprop(<span class="predefined-type">String</span> value){
+    myprop = value;
+  }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>MyBean.groovy</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy"><span class="type">class</span> <span class="class">MyBean</span> <span class="directive">implements</span> <span class="predefined-type">Serializable</span>{
+  <span class="predefined-type">String</span> myProp</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_consideraciones_de_los_pogo_s">Consideraciones de los POGO’s</h4>
+<div class="paragraph">
+<p>Las propiedades pueden ser legibles o escribibles dependiendo del getter o setter disponible. Groovy siempre expone un atributo con sus métodos de acceso, pero podemos tener variantes:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Si el atributo es señalado como private no se generan getters ni setters.</p>
+</li>
+<li>
+<p>Si la palabra reservada final es usada en la declaración del atributo entonces será de sólo lectura.</p>
+</li>
+<li>
+<p>Siempre se puede usar setProperty y getProperty para acceder a los atributos de un objeto.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_trabajando_con_pogo_s">Trabajando con POGO’s</h4>
+<div class="paragraph">
+<p>Podemos hacer uso de los métodos de acceso existentes en un JavaBean de la manera Groovy, o bien, con Groovy generar los métodos de acceso para que Java los pueda usar como comúnmente lo hace.</p>
+</div>
+<div class="paragraph">
+<p>Además, podemos hacer nuestras propias implementaciones de los métodos de acceso y conservar los creados por Groovy; con ayuda del operador ‘@’ durante la invocación del método.</p>
+</div>
+<div class="paragraph">
+<p><strong>MethodAccesors.groovy</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy"><span class="type">class</span> <span class="class">DoublerBean</span>{
+  <span class="directive">public</span> value
+
+  <span class="type">void</span> setValue(value){
+    <span class="local-variable">this</span>.value = value
+  }
+
+  <span class="keyword">def</span> <span class="function">getValue</span>(){
+    value * <span class="integer">2</span>
+  }
+}
+
+<span class="keyword">def</span> bean = <span class="keyword">new</span> DoublerBean(<span class="key">value</span>:<span class="integer">100</span>)
+
+<span class="keyword">assert</span> <span class="integer">200</span> == bean.value
+<span class="keyword">assert</span> <span class="integer">100</span> == bean.@value</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Notas adicionales</strong></p>
+</div>
+<div class="paragraph">
+<p><a href="http://docs.codehaus.org/display/GROOVY/Differences+from+Java">Differences from Java</a></p>
+</div>
+<div class="paragraph">
+<p><span class="small">Powered by <a href="http://makingdevs.com/">MakingDevs.com</a></span></p>
+</div>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-03-26 12:41:23 CST
+Last updated 2016-03-28 18:24:21 CST
 </div>
 </div>
 </body>

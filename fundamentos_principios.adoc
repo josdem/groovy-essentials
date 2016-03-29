@@ -244,3 +244,137 @@ class Pedido {
   }
 }
 ----
+
+#### Características de los scripts en Groovy
+* Son archivos de texto, generalmente con la extensión .groovy
+* La ejecución es directa no necesitamos compilar previamente(Groovy lo hace por nosotros)
+* No necesitamos definir una clase para correrlo
+* Si el script necesita de otras clases, no necesita compilarlas para usarlas
+
+#### Datos importantes de los scripts
+* Si un archivo .groovy no declara un clase, es transparentemente envuelto en una clase tipo Script
+** El contenido del script es contenido en el método run() y este a su vez puesto en un main() construido por Groovy
+* Si un archivo Groovy contiene exactamente la declaración de una clase con el mismo nombre del archivo(sin la extensión), se comporta como Java
+* Un archivo Groovy que contenga la declaración de varias clases, no esta forzado a que el nombre del archivo coincida con alguna clase
+* Un archivo Groovy con la mezcla de clases y scripts, conlleva a que el código del script sea la clase principal a ser ejecutada, por lo tanto, no debemos declarar una clase con el mismo nombre del archivo
+
+*Scripting.groovy*
+
+[source, groovy]
+----
+class Perfil {
+  private String bio
+  private Date bornDate
+  private Persona persona
+  private String twitter
+  private String facebook
+
+}
+
+class Pedido {
+  Persona comprador
+  Date dateCreated
+  Date lastUpdated
+
+  String toString() {
+    "$comprador - $dateCreated"
+  }
+}
+
+
+Persona persona = new Persona()
+persona.setNombre("Desarrollador");
+
+println persona
+
+Perfil perfil = new Perfil()
+try{
+  perfil.setBio("My bio")
+}catch(Exception e){
+  println "No se puede establecer la biografia..."
+}
+
+Pedido pedido = new Pedido()
+pedido.setDateCreated(new Date())
+pedido.setComprador(persona)
+println pedido
+----
+
+TIP: Recuerda! Puedes analizar la clase con javap.
+
+#### POGO’s
+Los JavaBeans son clases Java comúnes que exponen sus propiedades. Si una clase expone métodos con un esquema de nombrado como getNombre() y setNombre(nombre), entonces se describe a ‘nombre’ como una propiedad de la clase. Los métodos ‘get’ y ‘set’ son llamados métodos de acceso. Y las propiedades booleanas pueden usar el prefijo ‘is’.
+
+La convención de JavaBeans define un modelo ligero y generico para los componentes de software en Java. El modelo del componente esta construido sobre convenciones de nombrado que permiten a las clases Java exponerese ante otras clases o herramientas.
+
+Un GroovyBean es un JavaBean definido en Groovy. Pero Groovy facilita el trabajo con ellos de varias formas:
+
+* Generando los métodos de acceso
+* Permitiendo el acceso simplificado a los JavaBeans
+* Un registro simplificado de manejadores de eventos en conjunto con anotaciones para declarar una propiedad como bindable.
+* Un constructor que recibe un mapa con los posibles valores de los atributos del Bean
+
+IMPORTANT: Considera esto! Posteriormente estaremos viendo el uso de mapas y es donde todo toma sentido....
+
+*MyBean.java*
+
+[source, java]
+----
+public class MyBean implements java.io.Serializable {
+  private String myProp;
+  public String getMyprop(){
+    return myprop;
+  }
+  public void setMyprop(String value){
+    myprop = value;
+  }
+}
+----
+
+*MyBean.groovy*
+
+[source,groovy]
+----
+class MyBean implements Serializable{
+  String myProp
+----
+
+#### Consideraciones de los POGO’s
+Las propiedades pueden ser legibles o escribibles dependiendo del getter o setter disponible. Groovy siempre expone un atributo con sus métodos de acceso, pero podemos tener variantes:
+
+* Si el atributo es señalado como private no se generan getters ni setters.
+* Si la palabra reservada final es usada en la declaración del atributo entonces será de sólo lectura.
+* Siempre se puede usar setProperty y getProperty para acceder a los atributos de un objeto.
+
+#### Trabajando con POGO’s
+Podemos hacer uso de los métodos de acceso existentes en un JavaBean de la manera Groovy, o bien, con Groovy generar los métodos de acceso para que Java los pueda usar como comúnmente lo hace.
+
+Además, podemos hacer nuestras propias implementaciones de los métodos de acceso y conservar los creados por Groovy; con ayuda del operador ‘@’ durante la invocación del método.
+
+*MethodAccesors.groovy*
+
+[source,groovy]
+----
+class DoublerBean{
+  public value
+
+  void setValue(value){
+    this.value = value
+  }
+
+  def getValue(){
+    value * 2
+  }
+}
+
+def bean = new DoublerBean(value:100)
+
+assert 200 == bean.value
+assert 100 == bean.@value
+----
+
+*Notas adicionales*
+
+link:http://docs.codehaus.org/display/GROOVY/Differences+from+Java[Differences from Java]
+
+[small]#Powered by link:http://makingdevs.com/[MakingDevs.com]#
