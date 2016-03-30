@@ -840,13 +840,433 @@ println e.class <span class="comment">// meh!</span></code></pre>
 </div>
 </div>
 </div>
+<div class="sect3">
+<h4 id="_strings">Strings</h4>
+<div class="paragraph">
+<p><strong>theStrings.groovy</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy">println <span class="string"><span class="delimiter">&quot;</span><span class="content">he said 'cheese' once</span><span class="delimiter">&quot;</span></span>
+println <span class="string"><span class="delimiter">'</span><span class="content">he said &quot;cheese!&quot; again</span><span class="delimiter">'</span></span>
+
+<span class="comment">//Concatenacion</span>
+a = <span class="string"><span class="delimiter">&quot;</span><span class="content">world</span><span class="delimiter">&quot;</span></span>
+print <span class="string"><span class="delimiter">&quot;</span><span class="content">hello </span><span class="delimiter">&quot;</span></span> + a + <span class="string"><span class="delimiter">&quot;</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>
+
+<span class="comment">//Uso de Strings con triples comillas</span>
+<span class="keyword">def</span> name = <span class="string"><span class="delimiter">&quot;</span><span class="content">MakingDevs</span><span class="delimiter">&quot;</span></span>
+<span class="keyword">def</span> text = <span class="string"><span class="delimiter">&quot;&quot;&quot;</span><span class="char">\
+</span><span class="content">Hola </span><span class="inline"><span class="inline-delimiter">$</span>name</span><span class="content">
+como estas?
+</span><span class="delimiter">&quot;&quot;&quot;</span></span>
+
+<span class="keyword">assert</span> text != <span class="predefined-constant">null</span>
+println(text)
+
+<span class="comment">//Uso de GStrings</span>
+println <span class="keyword">new</span> <span class="predefined-type">Date</span>()
+x = <span class="string"><span class="delimiter">&quot;</span><span class="content">Actualmente es </span><span class="inline"><span class="inline-delimiter">${</span> <span class="keyword">new</span> <span class="predefined-type">Date</span>() <span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span>
+<span class="keyword">assert</span> x.values[<span class="integer">0</span>] <span class="keyword">instanceof</span> <span class="predefined-type">Date</span>
+println x
+
+<span class="keyword">def</span> s = <span class="string"><span class="delimiter">&quot;</span><span class="content">String </span><span class="delimiter">&quot;</span></span>
+<span class="keyword">def</span> g = <span class="string"><span class="delimiter">&quot;</span><span class="content">GString creado a las </span><span class="inline"><span class="inline-delimiter">${</span><span class="keyword">new</span> <span class="predefined-type">Date</span>()<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span>
+<span class="keyword">def</span> x = s + g
+<span class="keyword">assert</span> s <span class="keyword">instanceof</span> <span class="predefined-type">String</span>
+<span class="keyword">assert</span> g <span class="keyword">instanceof</span> GString
+<span class="keyword">assert</span> x <span class="keyword">instanceof</span> <span class="predefined-type">String</span></code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Adicionalmente! Siempre es de ayuda tener la <a href="http://groovy.codehaus.org/JN1525-Strings">documentación de String en Groovy</a>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_más_operadores">Más operadores(==, &lt;&#8658;, ?:)</h4>
+<div class="paragraph">
+<p><strong>Equals ==</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy"><span class="keyword">assert</span> <span class="keyword">new</span> <span class="predefined-type">BigDecimal</span>(<span class="integer">90</span>) == <span class="integer">90</span>
+<span class="keyword">assert</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">MakingDevs</span><span class="delimiter">&quot;</span></span> == <span class="string"><span class="delimiter">&quot;</span><span class="content">MakingDevs</span><span class="delimiter">&quot;</span></span>
+
+<span class="type">class</span> <span class="class">Telefono</span>{
+  <span class="predefined-type">String</span> tipo
+  <span class="type">boolean</span> equals(Telefono otroTelefono){
+    println <span class="string"><span class="delimiter">&quot;</span><span class="content">Comparando</span><span class="delimiter">&quot;</span></span>
+    tipo == otroTelefono.tipo
+  }
+}
+<span class="keyword">def</span> t1 = <span class="keyword">new</span> Telefono()
+t1.tipo = <span class="string"><span class="delimiter">'</span><span class="content">Smartphone</span><span class="delimiter">'</span></span>
+<span class="keyword">def</span> t2 = <span class="keyword">new</span> Telefono()
+t2.tipo = <span class="string"><span class="delimiter">'</span><span class="content">Cellphone</span><span class="delimiter">'</span></span>
+<span class="keyword">assert</span> t1 != t2</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>A diferencia de Java, el operador == ejecuta el método equals o compareTo si Comparable está implementado</p>
+</div>
+<div class="paragraph">
+<p><strong>Spacheship &lt;&#8658;</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy"><span class="keyword">assert</span> <span class="integer">5</span> &lt;=&gt; <span class="integer">5</span> == <span class="integer">0</span>
+<span class="keyword">assert</span> <span class="integer">10</span> &lt;=&gt; <span class="integer">5</span> == <span class="integer">1</span>
+<span class="keyword">assert</span> <span class="integer">10</span> &lt;=&gt; <span class="integer">20</span> == -<span class="integer">1</span>
+<span class="keyword">assert</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">MakingDevs</span><span class="delimiter">&quot;</span></span> &lt;=&gt; <span class="string"><span class="delimiter">&quot;</span><span class="content">MakingDevs</span><span class="delimiter">&quot;</span></span> == <span class="integer">0</span>
+<span class="keyword">assert</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">MakingDevs</span><span class="delimiter">&quot;</span></span> &lt;=&gt; <span class="string"><span class="delimiter">&quot;</span><span class="content">MD</span><span class="delimiter">&quot;</span></span> == <span class="integer">1</span>
+<span class="keyword">assert</span> <span class="string"><span class="delimiter">&quot;</span><span class="content">MD</span><span class="delimiter">&quot;</span></span> &lt;=&gt; <span class="string"><span class="delimiter">&quot;</span><span class="content">MakingDevs</span><span class="delimiter">&quot;</span></span> == -<span class="integer">1</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Es una forma de ejecutar el método compareTo()</p>
+</div>
+<div class="paragraph">
+<p><strong>Elvis ?:</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy">(x,y) = [<span class="string"><span class="delimiter">'</span><span class="content">v</span><span class="delimiter">'</span></span>,<span class="string"><span class="delimiter">'</span><span class="content">d</span><span class="delimiter">'</span></span>]
+<span class="keyword">if</span>(x != <span class="predefined-constant">null</span> &amp;&amp; x.size() &gt; <span class="integer">0</span>) x <span class="keyword">else</span> y
+<span class="keyword">if</span>(x &amp;&amp; x.size()) x <span class="keyword">else</span> y <span class="comment">// Groovy Truth</span>
+<span class="keyword">if</span>(x) x <span class="keyword">else</span> y <span class="comment">// Groovy Truth</span>
+x ? x : y
+x ?: y</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Es una abreviatura al operador ternario de Java para manejo de dos valores</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_expresiones_regulares">Expresiones regulares</h3>
+<div class="paragraph">
+<p>Groovy cuenta con operadores que aportan mucha flexibilidad y facilidad de uso a las expresiones regulares:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>El operador de expresiones regulares find =~</p>
+</li>
+<li>
+<p>El operador de expresiones regulares match ==~</p>
+</li>
+<li>
+<p>El operador de expresiones regulares pattern ~String</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>String regex</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy"><span class="keyword">assert</span> <span class="string"><span class="delimiter">'</span><span class="content">abcde</span><span class="delimiter">'</span></span>.find{ <span class="local-variable">it</span> &gt; <span class="string"><span class="delimiter">'</span><span class="content">b</span><span class="delimiter">'</span></span> } == <span class="string"><span class="delimiter">'</span><span class="content">c</span><span class="delimiter">'</span></span>
+<span class="keyword">assert</span> <span class="string"><span class="delimiter">'</span><span class="content">abcde</span><span class="delimiter">'</span></span>.findAll{ <span class="local-variable">it</span> &gt; <span class="string"><span class="delimiter">'</span><span class="content">b</span><span class="delimiter">'</span></span> } == [<span class="string"><span class="delimiter">'</span><span class="content">c</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">d</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">e</span><span class="delimiter">'</span></span>]
+<span class="keyword">assert</span> <span class="string"><span class="delimiter">'</span><span class="content">abcde</span><span class="delimiter">'</span></span>.findIndexOf{ <span class="local-variable">it</span> &gt; <span class="string"><span class="delimiter">'</span><span class="content">c</span><span class="delimiter">'</span></span> } == <span class="integer">3</span>
+<span class="keyword">assert</span> <span class="string"><span class="delimiter">'</span><span class="content">abcde</span><span class="delimiter">'</span></span>.every{ <span class="local-variable">it</span> &lt; <span class="string"><span class="delimiter">'</span><span class="content">g</span><span class="delimiter">'</span></span> } &amp;&amp; ! <span class="string"><span class="delimiter">'</span><span class="content">abcde</span><span class="delimiter">'</span></span>.every{ <span class="local-variable">it</span> &lt; <span class="string"><span class="delimiter">'</span><span class="content">c</span><span class="delimiter">'</span></span> }
+<span class="keyword">assert</span> <span class="string"><span class="delimiter">'</span><span class="content">abcde</span><span class="delimiter">'</span></span>.any{ <span class="local-variable">it</span> &gt; <span class="string"><span class="delimiter">'</span><span class="content">c</span><span class="delimiter">'</span></span> } &amp;&amp; ! <span class="string"><span class="delimiter">'</span><span class="content">abcde</span><span class="delimiter">'</span></span>.any{ <span class="local-variable">it</span> &gt; <span class="string"><span class="delimiter">'</span><span class="content">g</span><span class="delimiter">'</span></span> }
+<span class="keyword">assert</span> <span class="string"><span class="delimiter">'</span><span class="content">MakingDevs</span><span class="delimiter">'</span></span>.replace(<span class="string"><span class="delimiter">'</span><span class="content">e</span><span class="delimiter">'</span></span>,<span class="string"><span class="delimiter">'</span><span class="content">3</span><span class="delimiter">'</span></span>) == <span class="string"><span class="delimiter">'</span><span class="content">MakingD3vs</span><span class="delimiter">'</span></span>
+<span class="keyword">assert</span> <span class="string"><span class="delimiter">'</span><span class="content">AbcdE</span><span class="delimiter">'</span></span>.equalsIgnoreCase(<span class="string"><span class="delimiter">'</span><span class="content">aBCDe</span><span class="delimiter">'</span></span>)
+
+<span class="keyword">def</span> s= <span class="keyword">new</span> <span class="predefined-type">String</span>( <span class="keyword">new</span> <span class="predefined-type">StringBuffer</span>(<span class="string"><span class="delimiter">'</span><span class="content">abcdefg</span><span class="delimiter">'</span></span>) )
+<span class="keyword">assert</span> s == <span class="string"><span class="delimiter">'</span><span class="content">abcdefg</span><span class="delimiter">'</span></span>
+<span class="keyword">assert</span> s.contains(<span class="string"><span class="delimiter">'</span><span class="content">def</span><span class="delimiter">'</span></span>)
+<span class="keyword">assert</span> s.contentEquals(<span class="string"><span class="delimiter">'</span><span class="content">abcdefg</span><span class="delimiter">'</span></span>)
+<span class="keyword">assert</span> s.contentEquals( <span class="keyword">new</span> <span class="predefined-type">StringBuffer</span>(<span class="string"><span class="delimiter">'</span><span class="content">abcdefg</span><span class="delimiter">'</span></span>) )
+<span class="keyword">def</span> s2= s.replace(<span class="string"><span class="delimiter">'</span><span class="content">def</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">xyz</span><span class="delimiter">'</span></span>)
+<span class="keyword">assert</span> s2 == <span class="string"><span class="delimiter">'</span><span class="content">abcxyzg</span><span class="delimiter">'</span></span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>find y match</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy"><span class="keyword">def</span> finder = (<span class="string"><span class="delimiter">'</span><span class="content">groovy</span><span class="delimiter">'</span></span> =~ <span class="regexp"><span class="delimiter">/</span><span class="content">gr.*</span><span class="delimiter">/</span></span>)
+<span class="keyword">assert</span> finder <span class="keyword">instanceof</span> java.util.regex.Matcher
+
+<span class="keyword">def</span> matcher = (<span class="string"><span class="delimiter">'</span><span class="content">groovy</span><span class="delimiter">'</span></span> ==~ <span class="regexp"><span class="delimiter">/</span><span class="content">gr.*</span><span class="delimiter">/</span></span>)
+<span class="keyword">assert</span> matcher <span class="keyword">instanceof</span> <span class="predefined-type">Boolean</span>
+
+<span class="keyword">assert</span> <span class="string"><span class="delimiter">'</span><span class="content">Groovy rocks!</span><span class="delimiter">'</span></span> =~ <span class="regexp"><span class="delimiter">/</span><span class="content">Groovy</span><span class="delimiter">/</span></span>  <span class="comment">// =~ en condicional es un boolean</span>
+<span class="keyword">assert</span> !(<span class="string"><span class="delimiter">'</span><span class="content">Groovy rocks!</span><span class="delimiter">'</span></span> ==~ <span class="regexp"><span class="delimiter">/</span><span class="content">Groovy</span><span class="delimiter">/</span></span>)  <span class="comment">// ==~ coincidencia exacta</span>
+<span class="keyword">assert</span> <span class="string"><span class="delimiter">'</span><span class="content">Groovy rocks!</span><span class="delimiter">'</span></span> ==~ <span class="regexp"><span class="delimiter">/</span><span class="content">Groovy.*</span><span class="delimiter">/</span></span>
+
+<span class="keyword">def</span> cool = <span class="regexp"><span class="delimiter">/</span><span class="content">gr</span><span class="char">\w</span><span class="content">{4}</span><span class="delimiter">/</span></span>
+<span class="keyword">def</span> findCool = (<span class="string"><span class="delimiter">'</span><span class="content">groovy, java and grails rocks!</span><span class="delimiter">'</span></span> =~ <span class="regexp"><span class="delimiter">/</span><span class="inline"><span class="inline-delimiter">$</span>cool</span><span class="delimiter">/</span></span>)
+<span class="keyword">assert</span> <span class="integer">2</span> == findCool.count
+<span class="keyword">assert</span> <span class="integer">2</span> == findCool.size()
+<span class="keyword">assert</span> <span class="string"><span class="delimiter">'</span><span class="content">groovy</span><span class="delimiter">'</span></span> == findCool[<span class="integer">0</span>]
+<span class="keyword">assert</span> <span class="string"><span class="delimiter">'</span><span class="content">grails</span><span class="delimiter">'</span></span> == findCool.getAt(<span class="integer">1</span>)
+
+<span class="keyword">def</span> group = (<span class="string"><span class="delimiter">'</span><span class="content">groovy and grails, ruby and rails</span><span class="delimiter">'</span></span> =~ <span class="regexp"><span class="delimiter">/</span><span class="content">(</span><span class="char">\w</span><span class="content">+) and (</span><span class="char">\w</span><span class="content">+)</span><span class="delimiter">/</span></span>)
+<span class="keyword">assert</span> group.hasGroup()
+<span class="keyword">assert</span> <span class="integer">2</span> == group.size()
+<span class="keyword">assert</span> [<span class="string"><span class="delimiter">'</span><span class="content">groovy and grails</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">groovy</span><span class="delimiter">'</span></span>, <span class="string"><span class="delimiter">'</span><span class="content">grails</span><span class="delimiter">'</span></span>] == group[<span class="integer">0</span>]
+<span class="keyword">assert</span> <span class="string"><span class="delimiter">'</span><span class="content">rails</span><span class="delimiter">'</span></span> == group[<span class="integer">1</span>][<span class="integer">2</span>]
+
+<span class="keyword">assert</span> <span class="string"><span class="delimiter">'</span><span class="content">Hola MakingDevs</span><span class="delimiter">'</span></span> == (<span class="string"><span class="delimiter">'</span><span class="content">Saludos MakingDevs</span><span class="delimiter">'</span></span> =~ <span class="regexp"><span class="delimiter">/</span><span class="content">Saludos</span><span class="delimiter">/</span></span>).replaceFirst(<span class="string"><span class="delimiter">'</span><span class="content">Hola</span><span class="delimiter">'</span></span>)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Pattern ~String</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy"><span class="keyword">import</span> <span class="include">java.util.regex.Pattern</span>
+
+<span class="keyword">def</span> simplePattern = ~<span class="string"><span class="delimiter">'</span><span class="content">[ab]test</span><span class="char">\\</span><span class="content">d</span><span class="delimiter">'</span></span>
+<span class="keyword">assert</span> <span class="predefined-type">Pattern</span> == simplePattern.class
+
+<span class="keyword">def</span> quotedPattern = ~<span class="string"><span class="delimiter">&quot;</span><span class="content">string</span><span class="char">\$</span><span class="delimiter">&quot;</span></span>
+<span class="keyword">assert</span> quotedPattern <span class="keyword">instanceof</span> <span class="predefined-type">Pattern</span>
+
+<span class="keyword">def</span> slashy = ~<span class="regexp"><span class="delimiter">/</span><span class="content">slashy </span><span class="char">\d</span><span class="content">+ value</span><span class="delimiter">/</span></span>
+<span class="keyword">assert</span> slashy <span class="keyword">instanceof</span> <span class="predefined-type">Pattern</span>
+
+<span class="comment">// Patrón negado</span>
+<span class="keyword">def</span> negateSlashy = <span class="regexp"><span class="delimiter">/</span><span class="inline"><span class="inline-delimiter">${</span><span class="string"><span class="delimiter">'</span><span class="content">hello</span><span class="delimiter">'</span></span><span class="inline-delimiter">}</span></span><span class="content">GString</span><span class="content">$</span><span class="delimiter">/</span></span>.negate()
+<span class="keyword">assert</span> negateSlashy <span class="keyword">instanceof</span> <span class="predefined-type">Pattern</span>
+<span class="keyword">def</span> s = <span class="string"><span class="delimiter">'</span><span class="content">more</span><span class="delimiter">'</span></span>
+<span class="keyword">def</span> curlySlashy = ~<span class="string"><span class="delimiter">&quot;</span><span class="inline"><span class="inline-delimiter">$</span>s</span><span class="content"> GString</span><span class="delimiter">&quot;</span></span>
+<span class="keyword">assert</span> curlySlashy <span class="keyword">instanceof</span> <span class="predefined-type">Pattern</span>
+
+<span class="keyword">def</span> testPattern = ~<span class="string"><span class="delimiter">'</span><span class="content">t..t</span><span class="delimiter">'</span></span>
+<span class="keyword">assert</span> testPattern.matcher(<span class="string"><span class="delimiter">&quot;</span><span class="content">test</span><span class="delimiter">&quot;</span></span>).matches()
+
+<span class="comment">// Sobrecarga de operadores</span>
+<span class="keyword">def</span> p = ~<span class="regexp"><span class="delimiter">/</span><span class="char">\w</span><span class="content">+vy</span><span class="delimiter">/</span></span>
+<span class="keyword">assert</span> p.isCase(<span class="string"><span class="delimiter">'</span><span class="content">groovy</span><span class="delimiter">'</span></span>)
+<span class="keyword">switch</span> (<span class="string"><span class="delimiter">'</span><span class="content">groovy</span><span class="delimiter">'</span></span>) {
+  <span class="keyword">case</span> ~<span class="regexp"><span class="delimiter">/</span><span class="content">java</span><span class="delimiter">/</span></span>: <span class="keyword">assert</span> <span class="predefined-constant">false</span>; <span class="keyword">break</span>;
+  <span class="keyword">case</span> ~<span class="regexp"><span class="delimiter">/</span><span class="content">gr</span><span class="char">\w</span><span class="content">{4}</span><span class="delimiter">/</span></span>: <span class="keyword">assert</span> <span class="predefined-constant">true</span>; <span class="keyword">break</span>;
+  <span class="keyword">default</span>: <span class="keyword">assert</span> <span class="predefined-constant">false</span>
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Profundiza! Te recomendamos: <a href="http://groovy.codehaus.org/Regular+Expressions">Regular expressions</a>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_compatibilidad_con_los_elementos_de_java">Compatibilidad con los elementos de Java</h3>
+<div class="paragraph">
+<p>Es importante considerar que los elementos que existen actualmente en Java(incluyendo los agregados de Java 5), siguen funcionando y siendo respetados, sin embargo, Groovy agrega una forma más elegante de usarlos.</p>
+</div>
+<div class="sect3">
+<h4 id="_enums">Enums</h4>
+<div class="paragraph">
+<p><strong>issueEnum.groovy</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy"><span class="type">enum</span> IssuePriority{
+  URGENT,HIGH,MEDIUM,LOW,PLEASE,NO_MATTERS
+}
+
+<span class="keyword">def</span> <span class="function">issueNotifier</span>(priority){
+  print <span class="string"><span class="delimiter">&quot;</span><span class="content">Notificando incidencia...</span><span class="delimiter">&quot;</span></span>
+  <span class="keyword">switch</span>(priority){
+    <span class="keyword">case</span>[IssuePriority.URGENT,IssuePriority.HIGH]:
+      println <span class="string"><span class="delimiter">&quot;</span><span class="content">Se cayó la App, ¿es viernes?...</span><span class="delimiter">&quot;</span></span>
+      <span class="keyword">break</span>
+    <span class="keyword">case</span> IssuePriority.PLEASE..IssuePriority.MEDIUM:
+      println <span class="string"><span class="delimiter">&quot;</span><span class="content">Podemos dejarlo para después?...</span><span class="delimiter">&quot;</span></span>
+      <span class="keyword">break</span>
+    <span class="keyword">case</span> IssuePriority.NO_MATTERS:
+      println <span class="string"><span class="delimiter">&quot;</span><span class="content">Luego lo hacemos...</span><span class="delimiter">&quot;</span></span>
+      <span class="keyword">break</span>
+  }
+}
+
+issueNotifier(IssuePriority.URGENT)
+issueNotifier(IssuePriority.MEDIUM)
+issueNotifier(IssuePriority.NO_MATTERS)
+
+println <span class="string"><span class="delimiter">&quot;</span><span class="content">Hay que escalar una incidencia, los niveles son: </span><span class="delimiter">&quot;</span></span>
+<span class="keyword">for</span>(priority <span class="keyword">in</span> IssuePriority.values()){
+  print <span class="string"><span class="delimiter">&quot;</span><span class="inline"><span class="inline-delimiter">$</span>priority</span><span class="content"> </span><span class="delimiter">&quot;</span></span>
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_varargs">Varargs</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy"><span class="keyword">def</span> <span class="function">varargsJava</span>(<span class="type">int</span> a, <span class="type">int</span>... b){
+  println <span class="string"><span class="delimiter">&quot;</span><span class="content">Pasaste </span><span class="inline"><span class="inline-delimiter">$</span>a</span><span class="content"> y </span><span class="inline"><span class="inline-delimiter">$</span>b</span><span class="delimiter">&quot;</span></span>
+}
+
+<span class="keyword">def</span> <span class="function">metodoConArray</span>(<span class="type">int</span> a, <span class="type">int</span><span class="type">[]</span> b){
+  println <span class="string"><span class="delimiter">&quot;</span><span class="content">Pasaste </span><span class="inline"><span class="inline-delimiter">$</span>a</span><span class="content"> y </span><span class="inline"><span class="inline-delimiter">$</span>b</span><span class="delimiter">&quot;</span></span>
+}
+
+varargsJava(<span class="integer">1</span>,<span class="integer">2</span>,<span class="integer">3</span>,<span class="integer">4</span>,<span class="integer">5</span>)
+metodoConArray(<span class="integer">1</span>,<span class="integer">2</span>,<span class="integer">3</span>,<span class="integer">4</span>,<span class="integer">5</span>)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_genéricos">Genéricos</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy"><span class="type">class</span> <span class="class">Genericos</span>{
+  <span class="keyword">def</span> <span class="function">usaLista</span>(){
+    <span class="predefined-type">ArrayList</span>&lt;<span class="predefined-type">Integer</span>&gt; list = <span class="keyword">new</span> <span class="predefined-type">ArrayList</span>&lt;<span class="predefined-type">Integer</span>&gt;();
+    list.add(<span class="integer">1</span>);
+    list.add(<span class="float">2.0</span>); <span class="comment">// ????</span>
+    list.add(<span class="string"><span class="delimiter">&quot;</span><span class="content">hello</span><span class="delimiter">&quot;</span></span>); <span class="comment">// ???</span>
+    list
+  }
+}
+<span class="keyword">def</span> g = <span class="keyword">new</span> Genericos()
+g.usaLista()
+<span class="comment">// Necesitamos compilación estática...</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_static_imports">Static imports</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy"><span class="keyword">import</span> <span class="include">static</span> <span class="include">java.lang.Math.*</span>
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">Math.random</span> <span class="keyword">as</span> <span class="class">rand</span>
+<span class="keyword">import</span> <span class="include">groovy.lang.ExpandoMetaClass</span> <span class="keyword">as</span> <span class="class">EMC</span>
+
+println cos(PI/<span class="integer">2</span>)
+<span class="type">double</span> value = rand()
+<span class="keyword">def</span> metaClass = <span class="keyword">new</span> EMC(<span class="predefined-type">Integer</span>)
+<span class="keyword">assert</span> metaClass.getClass().name == <span class="string"><span class="delimiter">'</span><span class="content">groovy.lang.ExpandoMetaClass</span><span class="delimiter">'</span></span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_anotaciones">Anotaciones</h4>
+<div class="paragraph">
+<p>Todas las anotaciones conocidas en Java y las que usas en algún Framework son respetadas y no sufren ninguna modificación.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy"><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.junit.Assert.assertEquals</span>
+<span class="type">class</span> <span class="class">SimpleUnitTest</span> {
+  <span class="annotation">@Test</span>
+  <span class="type">void</span> shouldAdd() {
+    assertEquals(<span class="string"><span class="delimiter">&quot;</span><span class="content">Groovy should add correctly</span><span class="delimiter">&quot;</span></span>, <span class="integer">2</span>, <span class="integer">1</span> + <span class="integer">1</span>)
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_tipado_dinámico">Tipado dinámico</h4>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Until real software engineering is developed, the next best practice is to develop with a dynamic system that has extreme late binding in all aspects.
+~ Alan Kay
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>En el tipado dinámico, en runtime los tipos son inferidos y los métodos y sus argumentos son checados. Con esta habilidad podemos inyectar comportamiento en las clases en tiempo de ejecución, haciendo el código más extensible que con el tipado estático estricto.</p>
+</div>
+<div class="paragraph">
+<p>Venimos confiando en la “seguridad” del chequeo de tipos en tiempo de compilación. Sin embargo, seguridad en la seguridad de tipos es tan consolador como la seguridad en la seguridad social.</p>
+</div>
+<div class="paragraph">
+<p>En el tipado dinámico dejamos que el lenguaje infiera los tipos basados en el contexto. ¿Cuál es la ventaja? ¿Vale la pena renunciar a los beneficios de la verificación del tipo en el tiempo de compilación o edición de código(IDE)?</p>
+</div>
+<div class="paragraph">
+<p>Podemos escribit llamadas a métodos sobre objetos sin profundizar en los detalles en el momento. Durante la ejecución los objetos responden dinámicamente a los métodos o los mensajes. Podemos lograr este comportamiento dinámico en cierta medida con el polimorfismo en lenguajes de tipado estático. Sin embargo, la mayoría de los lenguajes de tipado estático usan herencia para el polimorfismo. El verdadero polimorfismo no se preocupa de los tipos, manda un mensaje a un objeto, y en tiempo de ejecución se da cuenta de la implementación apropiada que tiene que usar.</p>
+</div>
+<div class="paragraph">
+<p><strong>tipadoDinamico.groovy</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="groovy"><span class="keyword">import</span> <span class="include">org.codehaus.groovy.runtime.typehandling.GroovyCastException</span> <span class="keyword">as</span> <span class="class">GCE</span>
+
+<span class="keyword">def</span> variableDinamica
+variableDinamica = <span class="integer">1</span> ; <span class="keyword">assert</span> variableDinamica.class == <span class="predefined-type">Integer</span>
+variableDinamica = <span class="float">2f</span> ; <span class="keyword">assert</span> variableDinamica.class == <span class="predefined-type">Float</span>
+variableDinamica = <span class="float">3d</span> ; <span class="keyword">assert</span> variableDinamica.class == <span class="predefined-type">Double</span>
+variableDinamica = <span class="integer">3g</span> ; <span class="keyword">assert</span> variableDinamica.class == <span class="predefined-type">BigInteger</span>
+variableDinamica = <span class="string"><span class="delimiter">'</span><span class="content">a</span><span class="delimiter">'</span></span> ; <span class="keyword">assert</span> variableDinamica.class == <span class="predefined-type">String</span>
+variableDinamica = <span class="predefined-constant">true</span> ; <span class="keyword">assert</span> variableDinamica.class == <span class="predefined-type">Boolean</span>
+
+<span class="predefined-type">BigDecimal</span> variableTipada = <span class="integer">3</span>
+<span class="keyword">assert</span> variableTipada.class == <span class="predefined-type">BigDecimal</span>.class
+variableTipada = <span class="string"><span class="delimiter">&quot;</span><span class="content">A</span><span class="delimiter">&quot;</span></span>
+<span class="keyword">assert</span> variableTipada.class == <span class="predefined-type">BigDecimal</span>.class
+<span class="keyword">try</span> {
+  variableTipada = <span class="string"><span class="delimiter">&quot;</span><span class="content">Hola</span><span class="delimiter">&quot;</span></span>
+} <span class="keyword">catch</span>(GCE e){
+  println e.message
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Si investigamos acerca de los lenguajes dinámicos encontraremos que implica un tipado débil de manera rotunda. La verdad es más compleja. Por ejemplo, a pesar de ser un lenguaje dinámico, Groovy es un lenguaje fuertemente tipado. Y lo era incluso antes de la liberación de Groovy 2 y la comprobación de tipos estáticos. De hecho, Groovy es un lenguaje dinámico de tipado opcional. La diferencia es que los tipos en Groovy son muy importantes y están en el corazón del sistema de distribución dinámica.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Si camina como pato y grazna como pato entonces es un pato. Sin embargo, si camina como pato y necesita baterias entonces tenemos la abstracción incorrecta.
+~ duckTyping.groovy
+</td>
+</tr>
+</table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="typed.png" alt="typed">
+</div>
+</div>
+<div class="paragraph">
+<p><span class="small">Powered by <a href="http://makingdevs.com/">MakingDevs.com</a></span></p>
+</div>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-03-28 20:46:25 CST
+Last updated 2016-03-29 18:24:18 CST
 </div>
 </div>
 </body>

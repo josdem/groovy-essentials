@@ -212,3 +212,337 @@ println c.class
 println d.class
 println e.class // meh!
 ----
+
+#### Strings
+
+*theStrings.groovy*
+
+[source,groovy]
+----
+println "he said 'cheese' once"
+println 'he said "cheese!" again'
+
+//Concatenacion
+a = "world"
+print "hello " + a + "\n"
+
+//Uso de Strings con triples comillas
+def name = "MakingDevs"
+def text = """\
+Hola $name
+como estas?
+"""
+
+assert text != null
+println(text)
+
+//Uso de GStrings
+println new Date()
+x = "Actualmente es ${ new Date() }"
+assert x.values[0] instanceof Date
+println x
+
+def s = "String "
+def g = "GString creado a las ${new Date()}"
+def x = s + g
+assert s instanceof String
+assert g instanceof GString
+assert x instanceof String
+----
+
+TIP: Adicionalmente! Siempre es de ayuda tener la link:http://groovy.codehaus.org/JN1525-Strings[documentación de String en Groovy]
+
+#### Más operadores(==, <=>, ?:)
+
+*Equals ==*
+
+[source,groovy]
+----
+assert new BigDecimal(90) == 90
+assert "MakingDevs" == "MakingDevs"
+
+class Telefono{
+  String tipo
+  boolean equals(Telefono otroTelefono){
+    println "Comparando"
+    tipo == otroTelefono.tipo
+  }
+}
+def t1 = new Telefono()
+t1.tipo = 'Smartphone'
+def t2 = new Telefono()
+t2.tipo = 'Cellphone'
+assert t1 != t2
+----
+
+A diferencia de Java, el operador == ejecuta el método equals o compareTo si Comparable está implementado
+
+*Spacheship <=>*
+
+[source,groovy]
+----
+assert 5 <=> 5 == 0
+assert 10 <=> 5 == 1
+assert 10 <=> 20 == -1
+assert "MakingDevs" <=> "MakingDevs" == 0
+assert "MakingDevs" <=> "MD" == 1
+assert "MD" <=> "MakingDevs" == -1
+----
+
+Es una forma de ejecutar el método compareTo()
+
+*Elvis ?:*
+
+[source,groovy]
+----
+(x,y) = ['v','d']
+if(x != null && x.size() > 0) x else y
+if(x && x.size()) x else y // Groovy Truth
+if(x) x else y // Groovy Truth
+x ? x : y
+x ?: y
+----
+
+Es una abreviatura al operador ternario de Java para manejo de dos valores
+
+### Expresiones regulares
+Groovy cuenta con operadores que aportan mucha flexibilidad y facilidad de uso a las expresiones regulares:
+
+* El operador de expresiones regulares find =~
+* El operador de expresiones regulares match ==~
+* El operador de expresiones regulares pattern ~String
+
+*String regex*
+
+[source,groovy]
+----
+assert 'abcde'.find{ it > 'b' } == 'c'
+assert 'abcde'.findAll{ it > 'b' } == ['c', 'd', 'e']
+assert 'abcde'.findIndexOf{ it > 'c' } == 3
+assert 'abcde'.every{ it < 'g' } && ! 'abcde'.every{ it < 'c' }
+assert 'abcde'.any{ it > 'c' } && ! 'abcde'.any{ it > 'g' }
+assert 'MakingDevs'.replace('e','3') == 'MakingD3vs'
+assert 'AbcdE'.equalsIgnoreCase('aBCDe')
+
+def s= new String( new StringBuffer('abcdefg') )
+assert s == 'abcdefg'
+assert s.contains('def')
+assert s.contentEquals('abcdefg')
+assert s.contentEquals( new StringBuffer('abcdefg') )
+def s2= s.replace('def', 'xyz')
+assert s2 == 'abcxyzg'
+----
+
+*find y match*
+
+[source,groovy]
+----
+def finder = ('groovy' =~ /gr.*/)
+assert finder instanceof java.util.regex.Matcher
+
+def matcher = ('groovy' ==~ /gr.*/)
+assert matcher instanceof Boolean
+
+assert 'Groovy rocks!' =~ /Groovy/  // =~ en condicional es un boolean
+assert !('Groovy rocks!' ==~ /Groovy/)  // ==~ coincidencia exacta
+assert 'Groovy rocks!' ==~ /Groovy.*/
+
+def cool = /gr\w{4}/
+def findCool = ('groovy, java and grails rocks!' =~ /$cool/)
+assert 2 == findCool.count
+assert 2 == findCool.size()
+assert 'groovy' == findCool[0]
+assert 'grails' == findCool.getAt(1)
+
+def group = ('groovy and grails, ruby and rails' =~ /(\w+) and (\w+)/)
+assert group.hasGroup()
+assert 2 == group.size()
+assert ['groovy and grails', 'groovy', 'grails'] == group[0]
+assert 'rails' == group[1][2]
+
+assert 'Hola MakingDevs' == ('Saludos MakingDevs' =~ /Saludos/).replaceFirst('Hola')
+----
+
+*Pattern ~String*
+
+[source,groovy]
+----
+import java.util.regex.Pattern
+
+def simplePattern = ~'[ab]test\\d'
+assert Pattern == simplePattern.class
+
+def quotedPattern = ~"string\$"
+assert quotedPattern instanceof Pattern
+
+def slashy = ~/slashy \d+ value/
+assert slashy instanceof Pattern
+
+// Patrón negado
+def negateSlashy = /${'hello'}GString$/.negate()
+assert negateSlashy instanceof Pattern
+def s = 'more'
+def curlySlashy = ~"$s GString"
+assert curlySlashy instanceof Pattern
+
+def testPattern = ~'t..t'
+assert testPattern.matcher("test").matches()
+
+// Sobrecarga de operadores
+def p = ~/\w+vy/
+assert p.isCase('groovy')
+switch ('groovy') {
+  case ~/java/: assert false; break;
+  case ~/gr\w{4}/: assert true; break;
+  default: assert false
+}
+----
+
+TIP: Profundiza! Te recomendamos: link:http://groovy.codehaus.org/Regular+Expressions[Regular expressions]
+
+### Compatibilidad con los elementos de Java
+Es importante considerar que los elementos que existen actualmente en Java(incluyendo los agregados de Java 5), siguen funcionando y siendo respetados, sin embargo, Groovy agrega una forma más elegante de usarlos.
+
+#### Enums
+*issueEnum.groovy*
+
+[source,groovy]
+----
+enum IssuePriority{
+  URGENT,HIGH,MEDIUM,LOW,PLEASE,NO_MATTERS
+}
+
+def issueNotifier(priority){
+  print "Notificando incidencia..."
+  switch(priority){
+    case[IssuePriority.URGENT,IssuePriority.HIGH]:
+      println "Se cayó la App, ¿es viernes?..."
+      break
+    case IssuePriority.PLEASE..IssuePriority.MEDIUM:
+      println "Podemos dejarlo para después?..."
+      break
+    case IssuePriority.NO_MATTERS:
+      println "Luego lo hacemos..."
+      break
+  }
+}
+
+issueNotifier(IssuePriority.URGENT)
+issueNotifier(IssuePriority.MEDIUM)
+issueNotifier(IssuePriority.NO_MATTERS)
+
+println "Hay que escalar una incidencia, los niveles son: "
+for(priority in IssuePriority.values()){
+  print "$priority "
+}
+----
+
+#### Varargs
+
+[source,groovy]
+----
+def varargsJava(int a, int... b){
+  println "Pasaste $a y $b"
+}
+
+def metodoConArray(int a, int[] b){
+  println "Pasaste $a y $b"
+}
+
+varargsJava(1,2,3,4,5)
+metodoConArray(1,2,3,4,5)
+----
+
+#### Genéricos
+
+[source,groovy]
+----
+class Genericos{
+  def usaLista(){
+    ArrayList<Integer> list = new ArrayList<Integer>();
+    list.add(1);
+    list.add(2.0); // ????
+    list.add("hello"); // ???
+    list
+  }
+}
+def g = new Genericos()
+g.usaLista()
+// Necesitamos compilación estática...
+----
+
+#### Static imports
+
+[source,groovy]
+----
+import static java.lang.Math.*
+import static Math.random as rand
+import groovy.lang.ExpandoMetaClass as EMC
+
+println cos(PI/2)
+double value = rand()
+def metaClass = new EMC(Integer)
+assert metaClass.getClass().name == 'groovy.lang.ExpandoMetaClass'
+----
+
+#### Anotaciones
+
+Todas las anotaciones conocidas en Java y las que usas en algún Framework son respetadas y no sufren ninguna modificación.
+
+[source,groovy]
+----
+import static org.junit.Assert.assertEquals
+class SimpleUnitTest {
+  @Test
+  void shouldAdd() {
+    assertEquals("Groovy should add correctly", 2, 1 + 1)
+  }
+}
+----
+
+#### Tipado dinámico
+
+TIP: Until real software engineering is developed, the next best practice is to develop with a dynamic system that has extreme late binding in all aspects.
+~ Alan Kay
+
+En el tipado dinámico, en runtime los tipos son inferidos y los métodos y sus argumentos son checados. Con esta habilidad podemos inyectar comportamiento en las clases en tiempo de ejecución, haciendo el código más extensible que con el tipado estático estricto.
+
+Venimos confiando en la “seguridad” del chequeo de tipos en tiempo de compilación. Sin embargo, seguridad en la seguridad de tipos es tan consolador como la seguridad en la seguridad social.
+
+En el tipado dinámico dejamos que el lenguaje infiera los tipos basados en el contexto. ¿Cuál es la ventaja? ¿Vale la pena renunciar a los beneficios de la verificación del tipo en el tiempo de compilación o edición de código(IDE)?
+
+Podemos escribit llamadas a métodos sobre objetos sin profundizar en los detalles en el momento. Durante la ejecución los objetos responden dinámicamente a los métodos o los mensajes. Podemos lograr este comportamiento dinámico en cierta medida con el polimorfismo en lenguajes de tipado estático. Sin embargo, la mayoría de los lenguajes de tipado estático usan herencia para el polimorfismo. El verdadero polimorfismo no se preocupa de los tipos, manda un mensaje a un objeto, y en tiempo de ejecución se da cuenta de la implementación apropiada que tiene que usar.
+
+*tipadoDinamico.groovy*
+
+[source,groovy]
+----
+import org.codehaus.groovy.runtime.typehandling.GroovyCastException as GCE
+
+def variableDinamica
+variableDinamica = 1 ; assert variableDinamica.class == Integer
+variableDinamica = 2f ; assert variableDinamica.class == Float
+variableDinamica = 3d ; assert variableDinamica.class == Double
+variableDinamica = 3g ; assert variableDinamica.class == BigInteger
+variableDinamica = 'a' ; assert variableDinamica.class == String
+variableDinamica = true ; assert variableDinamica.class == Boolean
+
+BigDecimal variableTipada = 3
+assert variableTipada.class == BigDecimal.class
+variableTipada = "A"
+assert variableTipada.class == BigDecimal.class
+try {
+  variableTipada = "Hola"
+} catch(GCE e){
+  println e.message
+}
+----
+
+Si investigamos acerca de los lenguajes dinámicos encontraremos que implica un tipado débil de manera rotunda. La verdad es más compleja. Por ejemplo, a pesar de ser un lenguaje dinámico, Groovy es un lenguaje fuertemente tipado. Y lo era incluso antes de la liberación de Groovy 2 y la comprobación de tipos estáticos. De hecho, Groovy es un lenguaje dinámico de tipado opcional. La diferencia es que los tipos en Groovy son muy importantes y están en el corazón del sistema de distribución dinámica.
+
+TIP: Si camina como pato y grazna como pato entonces es un pato. Sin embargo, si camina como pato y necesita baterias entonces tenemos la abstracción incorrecta.
+~ duckTyping.groovy
+
+image::typed.png[]
+
+[small]#Powered by link:http://makingdevs.com/[MakingDevs.com]#
