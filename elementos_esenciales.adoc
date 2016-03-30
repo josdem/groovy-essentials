@@ -3,7 +3,7 @@
 
 # Elementos esenciales de Groovy
 
-## Sintaxis y azúcar sintáctica
+## [[bookmark-1]]Sintaxis y azúcar sintáctica
 
 ### Comentarios
 Es posible crear scripts ejecutables portables a plataformas Linux o Unix
@@ -400,7 +400,7 @@ switch ('groovy') {
 
 TIP: Profundiza! Te recomendamos: link:http://groovy.codehaus.org/Regular+Expressions[Regular expressions]
 
-### Compatibilidad con los elementos de Java
+### [[bookmark-2]]Compatibilidad con los elementos de Java
 Es importante considerar que los elementos que existen actualmente en Java(incluyendo los agregados de Java 5), siguen funcionando y siendo respetados, sin embargo, Groovy agrega una forma más elegante de usarlos.
 
 #### Enums
@@ -500,7 +500,7 @@ class SimpleUnitTest {
 }
 ----
 
-#### Tipado dinámico
+### [[bookmark-3]]Tipado Dinámico
 
 TIP: Until real software engineering is developed, the next best practice is to develop with a dynamic system that has extreme late binding in all aspects.
 ~ Alan Kay
