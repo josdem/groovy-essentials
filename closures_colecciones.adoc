@@ -1,0 +1,462 @@
+:icons: font
+:source-highlighter: coderay
+
+# Closures y colecciones
+
+## [[bookmark-1]]¿Qué es un closure?
+Es una pieza de código contenida en un objeto. Actúa como un método que puede tomar parámetros, procesarse y regresar un valor
+
+* Son una de las características más usadas dentro de Groovy
+* Pueden pasarse como métodos e invocarles
+* De hecho una de las contribuciones más significativas de Groovy hacia el JDK toma efecto en los closures
+* Proveen del poder de apuntadores a funciones, pero con la elegancia de los objetos y la facilidad del duck typing
+* Son sintácticamente elegantes
+* Proveen una manera fácil y simple para que una función delegue parte de su lógica
+* Son derivados de las expresiones lambda que provienen de la programación funcional, y una expresión lambda específica el parámetro y el mapeo de una función λ => Habilitan Programación funcional en Groovy
+* Son sólo un objeto de la clase groovy.lang.Closure
+* Pueden implementar métodos de interfaces como clases internas anónimas
+* Quitan toda la ceremonia y verbosidad en el código para crear componentes reusables
+* Permiten rediseñar y pensar nuevas formas de resolver un problema
+
+TIP: { [ argumentosDelClosure -> ] sentencias }
+~ Definición de un closure
+
+### [[bookmark-2]]Formas de usar un closure
+
+*cuadratica.groovy*
+
+[source,groovy]
+----
+//El alcance tradicional del closure, usado como función que puede ser llamada desde cualquier parte
+
+/**
+* Dada la ecuación ax^2 + bx + c = 0
+* La determinante ∆ es b^2 - 4ac
+*/
+def calculoDeDiscriminante(a,b,c){
+  (b*b) - (4*a*c)
+}
+
+println "Dado 1x^2 + 16x + 64 => ∆ = ${calculoDeDiscriminante(1,16,64)}"
+
+def unaSolucion(a,b,c){
+  def d = calculoDeDiscriminante(a,b,c)
+  if(d < 0)
+    throw new RuntimeException('No tiene solución!')
+  ((-1*b) + Math.sqrt(d)) / (2*a)
+}
+
+println "Dado 1x^2 + 16x + 64 => x1 = ${unaSolucion(1,16,64)}"
+//Sencillo no?, hasta aquí la parte del uso de closures es solo como llamadas a funciones
+----
+
+*cuadrados.groovy*
+
+[source,groovy]
+----
+//La manera Groovy me permite hacerlo de forma más elegante
+//Por ejemplo el cuadrado de los números impares hasta n
+def cuadrado(n,block){
+  for(int i=1;i<=n;i++){
+    block(i)
+  }
+}
+
+//Por defecto cualquier closure recibe un parametro de nombre it
+cuadrado(20, { if((it%2)==1) println "El cuadrado de $it es ${it*it}" })
+//Tambien podemos invocar este closure como
+println "Llamando al closure de otra manera..."
+cuadrado(20) { if((it%2)==1) println "El cuadrado de $it es ${it*it}" }
+//Podemos cambiarle el nombre al parametro it
+println "Llamando al closure de otra manera cambiando el nombre del parametro..."
+cuadrado(20) { myNumber -> if((myNumber%2)==1) println "El cuadrado de $myNumber es ${myNumber*myNumber}" }
+----
+
+*strategy.groovy*
+
+[source,groovy]
+----
+//Ahora enviemos el closure como parte de la evaluación del código
+//Veamos si una palabra o frase es palindrome
+def esPalindrome(frase,valida){
+  if(valida(frase)){ // Strategy
+    println "La palabra es palindrome"
+  }else{
+    println "La palabra NO es palindrome"
+  }
+}
+
+def validacion =  { it == it.reverse() }
+
+esPalindrome("hola mundo", validacion)
+esPalindrome("anitalavalatina", validacion)
+----
+
+*simulator.groovy*
+
+[source,groovy]
+----
+class Calculadora {
+  def operacion
+  Calculadora(_operacion_) { operacion = _operacion_ }
+  def operar(){
+    println "Ejecutanto operación..."
+    operacion()
+  }
+}
+
+def calculadora_1 = new Calculadora({ println "suma" })
+def operacion_desacoplada = { println "multiplica" }
+def calculadora_2 = new Calculadora(operacion_desacoplada)
+
+calculadora_1.operar()
+calculadora_2.operar()
+----
+
+Si un atributo de una clase es un closure entonces puede ser usado como un método.
+
+### [[bookmark-3]]Listas, mapas y rangos
+
+*listas.groovy*
+
+[source,groovy]
+----
+lista = []// Esencia 1 vs Ceremonia 0
+
+println lista.getClass().getName()
+
+lista = ["Uno", "Dos", "Tres"] //Inicializando la lista
+
+println lista
+
+println "Iterando la lista"
+lista.each { print "$it " }
+
+// Operaciones con listas
+lista += 4  //Agrego un solo elemento
+lista += ["Cuatro", "Cinco"] //Agrego una lista
+
+println "Iterando la lista con for"
+for(item in lista) { print "$item " }
+
+println "Agregando elemento a la lista con <<"
+lista << "Seis" // Agregando un elemento
+
+println lista
+
+println "Agrego Siete y Ocho"
+lista << "Siete" << "Ocho"
+println lista
+
+println "Remuevo siete y Ocho"
+lista = lista - ["Siete","Ocho"] //Puedo eliminar una coleccion
+println lista
+
+println "Remuevo el Seis"
+lista = lista - "Seis" //Puedo borrar un elemento solamente
+println lista
+
+println "Intento buscar un elemento que no existe"
+lista = lista - "Mil Ocho Mil" //no pasa nada si intento borrar algo que no existe
+println lista
+
+println "Marihuanadas, doblo la lista"
+lista = lista * 2
+println lista
+
+//Puedo obtener una parte de la lista
+subLista = lista[4..6]
+println subLista.dump()
+
+//Podemos usar un metodo de conveniencia para efectuar una operacion sobre
+//todos los elemento de la lista
+println lista.collect { "Numero ${it} Entero" }
+
+//Hay otro metodo de conveniencia que me sirve para buscar un elemento en la lista
+println lista.find { it == "Dos" }
+println lista.find { it == "Dos" }.getClass().name
+println lista.find { it == 4 }
+println lista.find { it == 4 }.getClass().name
+
+//Ahora el metodo anterior regresa la primera ocurrencia, que pasa si queremos todas?
+println lista.findAll { it == "Dos" }
+println lista.findAll { it == "Dos" }.getClass().name
+println lista.findAll { it == 4 }
+println lista.findAll { it == 4 }.getClass().name
+
+//Ahora juntemos todo los elementos en un solo enunciado
+println lista.join(',')
+println lista.join(',').getClass().name
+
+//probemos ahora a contar las letras de los objetos que sean String de la lista
+count = 0
+lista.each {
+  if(it.getClass().name == "java.lang.String"){
+    return count += it.size()
+  }else{
+    return 0
+  }
+}
+println "El tamaño total es de : $count"
+//Hagámoslo más fácil
+println lista.collect {
+  if(it.getClass().name == "java.lang.String"){
+    it.size()
+  }else{
+    return 0
+  }
+
+}.sum()
+----
+
+*mapas.groovyi*
+
+[source,groovy]
+----
+class Issue {
+  String identifier
+  String descripcion
+  Date fechaDeCreacion
+
+  String toString() {
+    "$identifier - $descripcion - $fechaDeCreacion"
+  }
+}
+
+issue1 = new Issue(identifier:"MD-1", descripcion:"Falta información en la tabla de datos", fechaDeCreacion:new Date())
+issue2 = new Issue(identifier:"MD-2", descripcion:"Error en el estilo de los encabezados CSS")
+issue3 = new Issue(identifier:"MD-3", descripcion:"Hace falta un botón 'deshacer' en las acciones principales.")
+
+mapa = ["issue1":issue1, "issue2":issue2, "issue3":issue3]
+println mapa
+println mapa.getClass().getName()
+
+println "Buscando el issue1"
+println mapa.issue1
+
+println "Buscando el issue2: $mapa.issue2 "
+println "Recorriendo el mapa"
+mapa.each { println "Issue: $it.key / $it.value" }
+
+println "Recorriendo el mapa con entry"
+
+mapa.each { issue -> println "Issue: $issue.key / $issue.value" }
+
+println "Recorriendo el mapa con key y value"
+mapa.each { issueId, issue ->
+  println "Issue: $issueId / $issue"
+}
+
+//Saludemos a todos en una invocacion
+println mapa.collect { issueId, issue ->
+  "Issue: $issueId / $issue"
+}
+
+//busquemos un elemento
+issue = mapa.find { issueId, issue ->
+  issue.descripcion.contains "CSS"
+}
+println issue
+
+//busquemos un conjunto de elementos
+resultado = mapa.findAll { issueId, issue ->
+  issue.descripcion =~ /(F|f)alta/
+}
+println resultado
+----
+
+TIP: Recuerda que los POGO's de Groovy reciben un mapa como constructor para esteblecer sus atributos.
+
+*rangos.groovy*
+
+[source,groovy]
+----
+rango = (0..10)
+
+println rango
+println rango.getClass().getName()
+
+rango2 = ('a'..'z')
+println rango2
+println rango2.getClass().getName()
+
+hoy = new Date()
+ayer = hoy-1
+antier = ayer-1
+maniana = hoy + 1
+println "Un rango de fechas"
+dias = (antier..maniana)
+println dias
+
+println "Recorriendo el rango con el for"
+for(dia in dias) {
+  println "\t $dia"
+}
+println "Recorriendo el rango con el each"
+dias.each { dia ->
+  println "\t $dia"
+----
+
+#### Más métodos de colecciones y el uso de Spread dot(*.)
+
+TIP: Te recomendamos los videos link:http://vimeo.com/channels/grailsmx/28973997[Colecciones en Groovy - Parte 1 de 2] y link:http://vimeo.com/channels/grailsmx/28974064[Colecciones en Groovy - Parte 2 de 2]
+
+*spreaddot.groovy*
+
+[source,groovy]
+----
+clazzes = [String, List, File]
+println clazzes.collect{ it.package }.collect{ it.name }
+println clazzes*.package*.name
+
+def exploreClazzes1(c1,c2,c3){ println "$c1 $c2 $c3" }
+def exploreClazzes2(c1,...c2){ println "$c1 $c2" }
+def exploreClazzes3(Class... c){ println c }
+
+exploreClazzes1(*clazzes)
+exploreClazzes2(*clazzes)
+exploreClazzes3(*clazzes)
+
+def range = (1..3)
+assert [0,1,2,3] == [0,*range]
+def map = [a:1,b:2]
+assert [a:1, b:2, c:3] == [c:3, *:map]
+
+println(["hola","making","devs","!!!","yeah"]*.capitalize())
+println(["1","2","3","4","5"].collect{ it + it }*.toInteger())
+----
+
+### [[bookmark-4]]Delegación de closures
+En un closure existen tres propiedades que determinan cual objeto maneja la llamada a un método desde dentro del closure
+
+* this : como en Java, se refiere a la instancia que encierra la clase donde un closure está definido
+* owner : el objeto encerrado(this o un closure alrededor)
+* delegate : por defecto es el mismo que owner, pero intercambiable por ejemplo en un Builder o en ExpandoMetaClass
+
+*this, owner, delegate*
+
+[source,groovy]
+----
+class Class1 {
+  def closure = {
+    println this.class.name
+    println delegate.class.name
+    def nestedClos = {
+      println owner.class.name
+    }
+    nestedClos()
+  }
+}
+
+def clos = new Class1().closure
+clos.delegate = this
+clos()
+----
+
+*delegation_script.groovy*
+
+[source,groovy]
+----
+//Definamos un closure que como parametro recibe y ejecuta un closure
+def examinandoClosure(closure){
+  closure()
+}
+
+//Usemos el closure
+examinandoClosure(){
+  println "En el primer closure..."
+  println "Class: " + getClass().name
+  println "'this' es " + this + ", 'super': " + this.getClass().superclass.name
+  println "'owner' es " + owner + " 'super': " + owner.getClass().superclass.name
+  println "'delegate' es " + delegate + " 'super': " + delegate.getClass().superclass.name
+
+  //Usemos el closure dentro del closure, como si fuera recursivo
+  examinandoClosure(){
+    println "En el closure dentro del primer closure..."
+    println "Class: " + getClass().name
+    println "'this' es " + this + ", 'super': " + this.getClass().superclass.name
+    println "'owner' es " + owner + " 'super': " + owner.getClass().superclass.name
+    println "'delegate' es " + delegate + " 'super': " + delegate.getClass().superclass.name
+  }
+
+}
+----
+
+*delegation_script.groovy*
+
+[source,groovy]
+----
+class MiClosure {
+
+  def examinandoClosure(closure){
+    closure()
+  }
+
+  def explorar(){
+    println "class : " + getClass().name
+    println "this : " + this + ", super:" + this.getClass().superclass.name
+    //println "owner : " + owner + ", super:" + owner.getClass().superclass.name
+    //println "delegate : " + delegate + ", super:" + delegate.getClass().superclass.name
+    examinandoClosure(){
+      println "En el primer closure..."
+      println "class : " + getClass().name
+      println "this : " + this + ", super:" + this.getClass().superclass.name
+      println "owner : " + owner + ", super:" + owner.getClass().superclass.name
+      println "delegate : " + delegate + ", super:" + delegate.getClass().superclass.name
+
+      examinandoClosure(){
+        println "En el closure dentro del primer closure..."
+        println "class : " + getClass().name
+        println "this : " + this + ", super:" + this.getClass().superclass.name
+        println "owner : " + owner + ", super:" + owner.getClass().superclass.name
+        println "delegate : " + delegate + ", super:" + delegate.getClass().superclass.name
+      }
+    }
+  }
+}
+
+new MiClosure().explorar()
+----
+
+#### Identity
+* El método identity() de un objeto en Groovy provee la capacidad de que cualquier método llamado dentro del alcance del objeto sea dirigido directamente al objeto
+* Acepta un closure como parámetro
+* Cualquier método que se llame dentro del closure es automáticamente resuelto por el contexto del objeto
+* Se recomienda usar identity() si necesitamos llamar multiples métodos de un objeto
+
+*Uso de Identity*
+
+[source,groovy]
+----
+//Definamos una lista
+lista = [1,2]
+
+//Agregamos unos elementos a la manera Groovy
+lista.add(3)
+lista.add(4)
+
+//Desplegamos algunos atributos de la lista a la manera Groovy
+println lista.size()
+println lista.contains(2)
+
+//Usemos identity
+lista.identity {
+  //El contexto del objeto contiene los métodos
+  add(5)
+  add(6)
+  //Resuelve los metodos por si solo si estan dentro del contexto
+  println size()
+  println contains(2)
+
+  //Vemos que this y owner son el closure contenido
+  println "'this': ${this}"
+  println "'owner': ${owner}"
+  //Delegate es el objeto original, es decir, la lista
+  println "'delegate': ${delegate}"
+}
+----
+
+TIP: Como Groovy hereda de *java.lang.Object* y muchos objetos *Collection* y *Map* tienen varios métodos que aceptan un Closure como argumento.
+
+
+[small]#Powered by link:http://makingdevs.com/[MakingDevs.com]#

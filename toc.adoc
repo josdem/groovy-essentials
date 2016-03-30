@@ -16,5 +16,10 @@
 ** link:elementos_esenciales.html#bookmark-1[Sintaxis y azúcar sintáctica]
 ** link:elementos_esenciales.html#bookmark-2[Compatibilidad con los elementos de Java]
 ** link:elementos_esenciales.html#bookmark-3[Tipado dinámico]
+* link:closures_colecciones.html[Closures y colecciones]
+** link:closures_colecciones.html#bookmark-1[¿Qué es un closure?]
+** link:closures_colecciones.html#bookmark-2[Formas de usar un closure]
+** link:closures_colecciones.html#bookmark-3[Listas, mapas y rangos]
+** link:closures_colecciones.html#bookmark-4[Delegación de closures]
 
 [small]#Powered by link:http://makingdevs.com/[MakingDevs.com]#
