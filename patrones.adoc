@@ -1,0 +1,451 @@
+:icons: font
+:source-highlighter: coderay
+
+# Patrones con Closures
+Los closures parecen ser un mecanismo conveniente para definir algo como una clase interna, pero la semántica es, de hecho, más poderosa y sutil de lo que ofrece una clase interna. En particular, las propiedades de los closures pueden resumirse de este modo:
+
+* Tienen un método implícito(el cual nunca es específicado en la definición del closure) llamado doCall()
+* Un closure tal vez sea invocado vía el método call(), o con una sintaxis especial de una invocación sin nombre (). Cualquier invocación será traducida por Groovy en una llamada al método doCall() del closure.
+* Los closures quizá tengan de 1..n argumentos, los cuales quizá sean tipados estáticamente o sin tipar. El primer parámetro está disponible vía un argumento sin tipar implícito de nombre it, si no hay argumentos explícitamente nombrados. Si el invocador no específica argumento alguno, el primer parámetro será nulo.
+* El desarrollador no tiene que usar it como el primer parámetro. Si lo desea puede usar un nombre diferente, y puede especificarlo en la lista de parámetros.
+* Los closures siempre regresan un valor. Esto puede ocurrir ya sea a través de una sentencia return explícita, o como el valor de la última sentencia en el cuerpo del closure.
+* Un closure puede referenciar cualquier variable definida dentro del ambiente del alcance léxico, cualquiera de estas se dice que está atada al closure.
+* Cualquier variable atada a un closure están disponibles para el mismo incluso si el closure mismo es regresado fuera del alcance.
+* Los closures son objetos de primera clase en Groovy, y son siempre derivados de la clase Closure. Y este puede ser definido a través de tipado dinámico o de una subclase tipada de la jerarquía de Closure.
+* El cuerpo del closure no es ejecutado hasta que es explícitamente invocado, es decir, no es invocado en tiempo de ejecución.
+* Un closure puede estar con curry de modo que una copia del closure está hecha con uno o más de sus parámetros fijados a un valor constante.
+
+## [[bookmark-1]]Implementación de interfaces
+
+TIP: La clave es...! El uso de la palabra reservada 'as' para forzar un closure al tipo.
+
+*closure_interfaz.groovy*
+
+[source,groovy]
+----
+//Incluso podemos implementar interfaces al vuelo sin necesidad de desarrollarlas todas
+import javax.swing.*
+import java.awt.*
+import java.awt.event.*
+
+// Incluso la palabra def es opcional
+frame = new JFrame(size:[300,300],layout:new FlowLayout(), defaultCloseOperation:javax.swing.WindowConstants.EXIT_ON_CLOSE)
+
+// Creamos unos componentes
+button = new JButton("Click")
+positionLabel = new JLabel("")
+msgLabel = new JLabel("")
+// Los agregamos
+frame.contentPane.add button
+frame.contentPane.add positionLabel
+frame.contentPane.add msgLabel
+frame.contentPane.add new JTextField("Texto")
+
+// usemos los closures para agregar un listener
+button.addActionListener(
+  { JOptionPane.showMessageDialog(frame,"You clicked!") } as ActionListener
+)
+
+// Definamos un closure por fuera
+displayMouseLocation = { positionLabel.setText("$it.x , $it.y") }
+// Vamos a agregarlo al listener
+frame.addMouseListener( displayMouseLocation as MouseListener )
+frame.addMouseMotionListener( displayMouseLocation as MouseMotionListener )
+
+// Vamos a definir un objeto del tipo Map al estilo Groovy
+handleFocus = [
+  focusGained : { msgLabel.setText "Good 2 see you..." },
+  focusLost : { msgLabel.setText "Come back soon!!!..." }
+]
+// Lo usamos para otro listener
+button.addFocusListener( handleFocus as FocusListener )
+
+// Definimos una lista de eventos como Strings
+events = [ 'WindowListener','ComponentListener' ]
+
+// Un closure que es un handler
+handler = { msgLabel.setText "$it" }
+
+// Iteramos la lista
+// Llamada a métodos formados de manera dinámica en tiempo de ejecución
+for(event in events){
+  handlerImpl = handler.asType(Class.forName("java.awt.event.${event}"))
+  frame."add${event}"(handlerImpl)
+}
+
+// Lo mostramos !!! :D
+frame.show()
+----
+
+## [[bookmark-2]]Manejo de recursos
+
+*closure_resources.groovy*
+
+[source,groovy]
+----
+//Usemos los closures para manejar recursos
+//definimos un metodo con unos cuantos metodos que manejen un archivo
+class ResourceWithoutManagement{
+  def open() { println "opened..." }
+  def close() { println "closed..." }
+  def read() { println "readed..." }
+  def write() { println "writed..." }
+}
+
+//instanciemos un objeto
+def resource = new ResourceWithoutManagement()
+resource.open()
+resource.read()
+resource.write()
+//no cerramos el recurso :S seguro mandara algun error
+----
+
+*closure_resources.groovy*
+
+[source,groovy]
+----
+//Manejemos el recurso para que abra y cierre por si solo
+class ResourceWithManagement{
+  def open() { println "opened..." }
+  def close() { println "closed..." }
+  def read() { println "readed..." }
+  def write() { println "writed..." }
+
+  def static use(closure){
+    def r = new ResourceWithManagement()
+    try{
+      r.open()
+      closure(r)
+    }finally{
+      r.close()
+    }
+  }
+}
+
+println "Manejando el recurso..."
+ResourceWithManagement.use { res ->
+  res.read()
+  res.write()
+}
+----
+
+*DB Resources*
+
+[source,groovy]
+----
+import groovy.sql.*
+import com.mchange.v2.c3p0.ComboPooledDataSource
+
+class DB {
+
+  def sqlMySQL
+
+  private DB() {
+
+    ComboPooledDataSource mysql = new ComboPooledDataSource(
+      driverClass:DBParameters.MYSQL_PARAMS.driver,
+      jdbcUrl:DBParameters.MYSQL_PARAMS.url,
+      user:DBParameters.MYSQL_PARAMS.user,
+      password:DBParameters.MYSQL_PARAMS.password,
+      minPoolSize: 5,
+      maxPoolSize: 80,
+      acquireIncrement: 10,
+      numHelperThreads:40
+      );
+    sqlMySQL = Sql.newInstance(mysql)
+  }
+
+  def withMySQLInstance(closure){
+    closure(sqlMySQL)
+  }
+
+}
+
+def query = "select 2+2 as SUMA"
+
+DB.instance.withMySQLInstance { sql ->
+  assert sql.firstRow(query)[0] == 4
+}
+----
+
+## [[bookmark-3]]Curry en closures
+
+El *curry* es una técnica inventada por Moses Schönfinkel and Gottlob Frege, y nombrada despúes por el lógico Haskell Brooks Curry, uno de los pioneros en programación funcional. La idea básica es tomar una función con múltiples parámetros y transformarla en una función con pocos parámetros fijando algunos valores.
+
+*Curry clásico*
+
+TIP: El verdadero poder del curry viene cuando los parámetros del curry son closures.
+
+### Curry con parámetros
+
+[source,groovy]
+----
+def multiplo = { x, y -> return x * y }  // closure
+def triple = multiplo.curry(3)
+// triple = { y -> return 3 * y }
+def cuadruple = multiplo.curry(4)
+// cuadruple = { y -> return 4 * y }
+def f1 = triple.call(4) // llamada explícita
+def f2 = cuadruple(5)   // llamada implícita
+println "ƒ(3x) = ${f1}"
+println "ƒ(4x) = ${f2}"
+----
+
+*Composición curry con closures*
+
+[source,groovy]
+----
+def multiplo = { x, y -> return x * y } // closure
+def triple = multiplo.curry(3)
+// triple = { y -> return 3 * y }
+def cuadruple = multiplo.curry(4)
+// cuadruple = { y -> return 4 * y }
+def composicion = { f, g, x -> return f(g(x)) }
+def _12veces = composicion.curry(triple, cuadruple)
+def _3docenas = _12veces(3)
+println "ƒ(4(3(x))) = ${_3docenas}"
+----
+
+*Logger - curry con closures*
+
+[source,groovy]
+----
+def configurator = { format, filter, line ->
+ filter(line) ?  format(line) : null
+}
+def appender = { config, append, line ->
+  def out = config(line)
+  if (out) append(out)
+}
+
+def dateFormatter   = { line -> "${new Date()}: $line" }
+def debugFilter     = { line -> line.contains('debug') }
+def consoleAppender = { line -> println line }
+
+def myConf = configurator.curry(dateFormatter, debugFilter)
+def myLog  = appender.curry(myConf, consoleAppender)
+myLog('aquí hay un mensaje de debug')
+myLog('este mensaje no se va a mostrar')
+----
+
+TIP: Lectura recomendada! Si deseas aprender un poco más del uso de curry puedes leer Practically Groovy: Functional programming with curried closures.
+
+## [[bookmark-4]]Closures dinámicos
+
+*Closure faltante*
+
+[source,groovy]
+----
+def dataSourceQuery(query){
+  println "Ejecutando ${query}"
+}
+
+def consultaClientesSQL(consulta){
+  if(consulta)
+  dataSourceQuery(consulta())
+  else
+  dataSourceQuery("SELECT * FROM cliente")
+}
+
+consultaClientesSQL()
+consultaClientesSQL {
+  "SELECT nombre FROM cliente WHERE id = 1"
+}
+----
+
+*Explorando un closure*
+
+[source,groovy]
+----
+def calculaIVAConIETU(monto,calculo){
+  if(calculo.maximumNumberOfParameters == 2)
+    calculo(monto, 1.11) // IETU
+  else
+    calculo(monto) // IVA
+}
+
+println calculaIVAConIETU(100) { it * 1.16 }
+println calculaIVAConIETU(100) { monto, ietu ->
+  monto * 1.16 * ietu
+}
+----
+
+*Tipos de parámetros en el closure*
+
+[source,groovy]
+----
+def examine(closure) {
+  println "$closure.maximumNumberOfParameters parameter(s) given:"
+  for(aParameter in closure.parameterTypes) { println aParameter.name }
+  println "--"
+}
+examine() { }
+examine() { it }
+examine() {-> }
+examine() { val1 -> }
+examine() {Date val1 -> }
+examine() {Date val1, val2 -> } examine() {Date val1, String val2 -> }
+----
+
+## [[bookmark-5]]Programación recursiva
+
+*Factorial*
+
+[source,groovy]
+----
+def factorial(BigInteger number) {
+  number == 1 ? 1 : number * factorial(number - 1)
+}
+try {
+println "factorial of 5 is ${factorial(5)}"
+println "Number of bits in the result is ${factorial(5000).bitCount()}"
+} catch(Throwable ex) {
+  println "Caught ${ex.class.name}"
+}
+----
+
+### Trampoline para programación recursiva
+*public Closure<V> trampoline()* Construye una variante trampoline del closure actual. Para evitar el desbordamiento de la pila debido a la profundidad de la recursividad, las funciones pueden aprovechar el mecanismo de trampolín y evitar las llamadas recursivas por completo. La función supone efectuar paso por paso el cálculo, en lugar de la llamada recursiva u otra función, regresa un nuevo closure, el cual será ejecutado por el *trampoline()* en el siguiente paso. Una vez que ningún closure es regresado entonces el trampoline para y regresa el valor del resultado final.
+
+TIP: Lectura recomendada
+Basado en el Libro Structure and Interpretation of Computer Programs podemos diferenciar entre el procedimiento y el proceso que se generan en un elemento recursivo y podemos repensar nuestra forma de escribir nuestro código basado en estos principios, Véase: link:http://mitpress.mit.edu/sicp/full-text/book/book-Z-H-11.html#%_sec_1.2[Procedures and the Processes They Generate]
+
+*Factorial*
+
+[source,groovy]
+----
+def factorial
+factorial = { int number, BigInteger theFactorial ->
+    number == 1 ?
+        theFactorial :
+        factorial(number - 1, number * theFactorial)
+}
+println "factorial of 5 is ${factorial(5, 1)}"
+println "Number of bits in the result is ${factorial(5000, 1)}"
+----
+
+*Factorial con trampoline*
+
+[source,groovy]
+----
+def factorial
+factorial = { int number, BigInteger theFactorial ->
+    number == 1 ?
+        theFactorial :
+        factorial.trampoline(number - 1, number * theFactorial)
+}.trampoline()
+println "factorial of 5 is ${factorial(5, 1)}"
+println "Number of bits in the result is ${factorial(5000, 1)}"
+----
+
+## [[bookmark-6]]Mejor rendimiento
+
+*Medimos el tiempo*
+
+[source,groovy]
+----
+def tiempo(posicion, funcion) {
+ def comienzo = System.nanoTime()
+ def resultado = funcion(posicion)
+ def fin = System.nanoTime()
+ def tiempoTotal = String.format("%.2f sec", (fin - comienzo)/1.0e9)
+ println "Fibonacci($posicion): $resultado, tiempo total: $tiempoTotal"
+}
+----
+
+*Fibonnaci v1*
+
+[source,groovy]
+----
+def fibonacci(posicion) {
+  if (posicion < 2)
+    1
+  else
+    fibonacci(posicion - 1) + fibonacci(posicion - 2)
+}
+
+tiempo(8) { posicion -> fibonacci(posicion)}
+//tiempo(30) { posicion -> fibonacci(posicion)}
+----
+
+*Fibonnaci v2*
+
+[source,groovy]
+----
+serieFibonacci = [0: 1, 1: 1]
+
+def fibonacciConSerieAlmacenada(position) {
+  if(!serieFibonacci.containsKey(position))
+    serieFibonacci[position] = fibonacciConSerieAlmacenada(position - 1) + fibonacciConSerieAlmacenada(position - 2)
+  serieFibonacci[position]
+}
+
+tiempo(8) { posicion -> fibonacci(posicion) }
+tiempo(40) { posicion -> fibonacciConSerieAlmacenada(posicion)}
+----
+
+*Fibonnaci v3*
+
+[source,groovy]
+----
+def fibonacci
+fibonacci = { posicion ->
+  posicion < 2 ? 1 : fibonacci(posicion - 1) + fibonacci(posicion - 2)
+}.memoize()
+
+tiempo(8) { posicion -> fibonacci(posicion) }
+tiempo(40) { posicion -> fibonacci(posicion) }
+----
+
+*Simple caso práctico*
+
+[source,groovy]
+----
+class LugarDao {
+
+  def busquedaLugaresSP
+
+  // Dejar el metodo igual y delegar a closure con memoize
+  def findAllByCampusCode(String name){
+    findAllByCampusCodeMemoize(name)
+  }
+  def findAllByCampusCodeMemoize = { String name ->
+    busquedaLugaresSP.execute([campus:name])."${busquedaLugaresSP.CURSOR_NAME}"
+  }.memoize()
+}
+----
+
+## [[bookmark-7]]Más patrones
+
+*Expose internal state*
+
+[source,groovy]
+----
+public class A {
+  private int atributo = 20
+
+  private String metodo()
+  Más patrones{
+    return "hello"
+  }
+
+  def metodoPublico(String name_)
+  {
+    def localVar = atributo + 5
+    def localVar2 = "Parámetro: ${name_}"
+    return {
+      println "${atributo} ${name_} ${localVar} ${localVar2} ${metodo()}"
+    }
+  }
+}
+
+A objeto = new A()
+def closureVar = objeto.metodoPublico("MakingDevs")
+closureVar()
+----
+
+TIP: Lectura recomendada
+Si necesitas saber más de los patrones con closures en Groovy te recomendamos link:http://groovy.codehaus.org/Design+Patterns+with+Groovy[Design Patterns with Groovy]
+
+
+[small]#Powered by link:http://makingdevs.com/[MakingDevs.com]#

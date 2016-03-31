@@ -21,5 +21,13 @@
 ** link:closures_colecciones.html#bookmark-2[Formas de usar un closure]
 ** link:closures_colecciones.html#bookmark-3[Listas, mapas y rangos]
 ** link:closures_colecciones.html#bookmark-4[Delegación de closures]
+* link:patrones.html[Patrones con Closures]
+** link:patrones.html#bookmark-1[Implementación de interfaces]
+** link:patrones.html#bookmark-2[Manejo de recursos]
+** link:patrones.html#bookmark-3[Curry en closures]
+** link:patrones.html#bookmark-4[Closures dinámicos]
+** link:patrones.html#bookmark-5[Programación recursiva]
+** link:patrones.html#bookmark-6[Mejor rendimiento]
+** link:patrones.html#bookmark-7[Más patrones]
 
 [small]#Powered by link:http://makingdevs.com/[MakingDevs.com]#
